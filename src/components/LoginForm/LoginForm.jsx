@@ -2,9 +2,11 @@ import { useState } from 'react';
 import { TextField, Button, Card, CardContent, Typography, Alert } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 
-import PropTypes from 'prop-types';
+import { useAuth } from '../../hooks/useAuth';
 
-const LoginForm = ({ onLogin }) => {
+const LoginForm = () => {
+    const { login } = useAuth();
+
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [error, setError] = useState('');
@@ -15,7 +17,7 @@ const LoginForm = ({ onLogin }) => {
         try {
             // TODO : Logique de connexion une API
             if (email === "admin@dev.fr" && password === "admin") {
-                onLogin();
+                login();
                 navigateTo('/');
             } else {
                 throw new Error("Identifiants incorrects");
@@ -63,9 +65,5 @@ const LoginForm = ({ onLogin }) => {
         </Card>
     );
 }
-
-LoginForm.propTypes = {
-    onLogin: PropTypes.func,
-};
 
 export { LoginForm };

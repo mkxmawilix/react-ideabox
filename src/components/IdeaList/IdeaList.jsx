@@ -13,12 +13,19 @@ import IdeaModal from '../IdeaModal';
 
 import PropTypes from "prop-types";
 
+import { useAuth } from "../../hooks/useAuth";
+
+/** SVG **/
+import ThumbUp from '../../assets/icons/thumb-up.svg';
+import ThumbDown from '../../assets/icons/thumb-down.svg';
+
 const StyledButtonRight = styled(Button)({
     float: 'right',
 });
 
 
-const IdeaList = ({ ideas, onSubmitIdea, auth }) => {
+const IdeaList = ({ ideas, onSubmitIdea }) => {
+    const { isLoggedIn } = useAuth();
     // Logic to handle modal state
     const [modalOpen, setModalOpen] = React.useState(false);
     const handleOpen = () => setModalOpen(true);
@@ -38,7 +45,7 @@ const IdeaList = ({ ideas, onSubmitIdea, auth }) => {
     return (
         <>
             <div>
-                {auth && (
+                {isLoggedIn && (
                     <StyledButtonRight variant="contained" color="primary" onClick={handleOpen} align="right">+ Ajouter une Nouvelle Idée</StyledButtonRight>
                 )}
                 <IdeaModal open={modalOpen} handleClose={handleClose} onSubmitIdea={handleSubmit}/>
@@ -70,10 +77,10 @@ const IdeaList = ({ ideas, onSubmitIdea, auth }) => {
                                     <TableCell align="left">{idea.description}</TableCell>
                                     <TableCell>{idea.points}</TableCell>
                                     <TableCell>
-                                        {auth && (
+                                        {isLoggedIn && (
                                             <>
-                                                <Button onClick={() => onClickVoteUp(idea)}>Vote Up</Button>
-                                                <Button onClick={() => onClickVoteDown(idea)}>Vote Down</Button>
+                                                <Button onClick={() => onClickVoteUp(idea)}><img src={ThumbUp} alt="icon" width={50} height={50}/></Button>
+                                                <Button onClick={() => onClickVoteDown(idea)}><img src={ThumbDown} alt="icon" width={50} height={50} /></Button>
                                             </>
                                         )}
                                     </TableCell>
@@ -90,7 +97,6 @@ const IdeaList = ({ ideas, onSubmitIdea, auth }) => {
 IdeaList.propTypes = {
     ideas: PropTypes.array,
     onSubmitIdea: PropTypes.func,
-    auth: PropTypes.bool,
 };
 
 export { IdeaList };
