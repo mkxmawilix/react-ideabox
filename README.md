@@ -6,7 +6,9 @@ Il a pour but de me faire découvrir le framework ReactJS et de me familiariser 
 
 N'ayant pas de partie "Back", les logiques de connexion, création/modification/suppression d'idées, de vote sont totalement fictives et les données non persistantes.
 
-La partie "Back" n'est pas encore disponible mais sera réalisée en NodeJS (ExpressJS) et MongoDB par la suite dans un projet annexe.
+La partie "Back" n'est pas encore disponible mais sera réalisée en NodeJS (ExpressJS) et MongoDB par la suite.
+
+Pour le moment un simple fichier JSON est utilisé pour simuler une base de données.
 
 ## Fonctionnalités
 

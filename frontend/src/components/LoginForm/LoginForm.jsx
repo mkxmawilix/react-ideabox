@@ -2,30 +2,26 @@ import { useState } from 'react';
 import { TextField, Button, Card, CardContent, Typography, Alert } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 
-import { useAuth } from '../../hooks/useAuth';
+import useAuth from "../../hooks/useAuth";
 
 const LoginForm = () => {
-    const { login } = useAuth();
+    const { signIn } = useAuth();
 
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [error, setError] = useState('');
-    const navigateTo = useNavigate();
+    const navigate = useNavigate();
 
-    const handleSubmit = (event) => {
+    const handleSubmit = async (event) => {
         event.preventDefault();
         try {
-            // TODO : Logique de connexion une API
-            if (email === "admin@dev.fr" && password === "admin") {
-                login();
-                navigateTo('/');
-            } else {
-                throw new Error("Identifiants incorrects");
-            }
+            await signIn({ email: email, password: password });
+            navigate('/', { replace: true });
         } catch (err) {
             setError(err.message);
         }
     };
+    
 
     return (
         <Card variant="outlined" sx={{ maxWidth: 400, mx: 'auto', mt: 5 }}>
