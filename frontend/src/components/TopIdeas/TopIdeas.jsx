@@ -6,7 +6,7 @@ import CardContent from '@mui/material/CardContent';
 import CardActions from '@mui/material/CardActions';
 import Typography from '@mui/material/Typography';
 import Button from '@mui/material/Button';
-import Grid from '@mui/material/Grid';
+import Grid from '@mui/material/Unstable_Grid2'; // Grid version 2
 
 // Hooks
 import useModal from '../../hooks/useModal';
@@ -20,18 +20,14 @@ import {formatDateAndTimeFR} from '../../services/Format/Date';
 // Styles
 import { GridContainer } from './style';
 
-const TopIdeas = ({ ideas }) => {
+const TopIdeas = ({ ideas, sortFunction, title, count }) => {
     const { isModalOpen, modalContent, openModal, closeModal } = useModal(false);
     const [topIdeas, setTopIdeas] = useState([]);
 
     useEffect(() => {
-        const sortedIdeas = [...ideas]
-            .filter(idea => idea.state !== 'done') // Filtre les idées non terminées
-            .sort((a, b) => b.points - a.points) // Trie les idées par points, décroissant
-            .slice(0, 5); // Prend les 5 premières idées
-
-        setTopIdeas(sortedIdeas);
-    }, [ideas]);
+        const newIdeas = [...ideas].sort(sortFunction).slice(0, count);
+        setTopIdeas(newIdeas);
+    }, [ideas, sortFunction, count]);
 
     const handleOpenModalRead = (idea) => {
         openModal(idea);
@@ -39,10 +35,10 @@ const TopIdeas = ({ ideas }) => {
 
     return (
         <GridContainer>
-            <Typography variant="h5" component="h2">Top 5 Ideas</Typography>
+            <Typography variant="h5" component="h2">{title}</Typography>
             <Grid container justify="center" spacing={2}>
                 {topIdeas.map(idea => (
-                    <Grid item key={idea.id} xs={12} sm={6} md={4} lg={3}>
+                    <Grid item={+true} key={idea.id} xs={12} sm={6} md={4} lg={3}>
                         <Card key={idea.id} variant="outlined" style={{ marginBottom: '10px' }}>
                             <CardContent>
                                 <Typography color="textSecondary" gutterBottom>
@@ -51,6 +47,12 @@ const TopIdeas = ({ ideas }) => {
                                 <Typography variant="h6">
                                     {idea.title}
                                 </Typography>
+                                {
+                                    (idea.state === 'done' && idea.closed_at) ? (
+                                        <Typography variant="caption">
+                                            Clôturée le {formatDateAndTimeFR(idea.closed_at)}
+                                        </Typography>) : null
+                                }
                             </CardContent>
                             <CardActions>
                                 <Button 
@@ -78,6 +80,9 @@ const TopIdeas = ({ ideas }) => {
 
 TopIdeas.propTypes = {
     ideas: PropTypes.arrayOf(PropTypes.object).isRequired,
+    sortFunction: PropTypes.func.isRequired,
+    title: PropTypes.string.isRequired,
+    count: PropTypes.number.isRequired,
 };
 
 export {TopIdeas};

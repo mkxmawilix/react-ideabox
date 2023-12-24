@@ -20,7 +20,7 @@ TODO :
 - [ ] Suppression d'une idée une fois connecté
 - [x] Affichage des idées
 - [x] Affichage d'une idée au clic sur la liste
-- [x] Affichage top 5 des idées
+- [x] Affichage "Top" des idées : 3 idées les plus votées, 3 idées les plus récentes, 3 idées dernièrement cloturées
 - [x] Tri des idées par date, titre, nombre de votes
 - [ ] Pouvoir voter pour une idée une fois connecté
 - [ ] Pouvoir commenter une idée une fois connecté

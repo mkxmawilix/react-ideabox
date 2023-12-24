@@ -126,7 +126,7 @@ const App = () => {
 
                     <main style={{ padding: '16px' }}>
                         <Routes>
-                            <Route exact path="/" element={<Home ideas={pendingIdeas}/>} />
+                            <Route exact path="/" element={<Home ideas={ideas}/>} />
                             <Route path="/pending-ideas" element={<IdeaList ideas={pendingIdeas} onSubmitIdea={onSubmitIdea}/>} />
                             <Route path="/completed-ideas" element={<IdeaList ideas={completedIdeas} onSubmitIdea={onSubmitIdea}/>} />
                             <Route path="/login" element={<LoginForm />} />

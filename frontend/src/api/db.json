@@ -28,45 +28,50 @@
             "title": "Pause Café Interactive",
             "description": "Organiser des pauses café quotidiennes où les collègues peuvent discuter de sujets non professionnels pour renforcer les liens.",
             "user_id": 1,
-            "created_at": "2023-12-22T10:00:00+01:00",
+            "created_at": "2023-12-19T10:00:00+01:00",
             "points": 50,
-            "state": "pending"
+            "state": "pending",
+            "closed_at": false
         },
         {
             "id": "f1e4c6d5-0410-4a4b-9986-92fd98d9356d",
             "title": "Réunions Matinales Courtes",
             "description": "Commencer chaque journée avec une brève réunion de 15 minutes pour partager les objectifs, les nouvelles importantes et discuter des défis à venir.",
             "user_id": 2,
-            "created_at": "2023-12-22T10:15:00+01:00",
+            "created_at": "2023-12-24T10:15:00+01:00",
             "points": 100,
-            "state": "pending"
+            "state": "pending",
+            "closed_at": false
         },
         {
             "id": "c1a048ad-9d94-4622-bfa3-99f8853a7186",
             "title": "Espace de Détente",
             "description": "La création d'un espace de détente au bureau offre un havre de paix pour les employés, leur permettant de se ressourcer et de se déconnecter brièvement du stress du travail. \n\nCet espace, équipé de jeux, de livres et de canapés confortables, favorise le bien-être mental et physique, ce qui peut se traduire par une augmentation de la productivité et de la créativité. En outre, cet espace offre une opportunité pour des interactions informelles entre collègues, renforçant ainsi les relations interpersonnelles et la cohésion d'équipe. \n\nEn somme, l'aménagement d'un tel espace contribue à créer un environnement de travail plus agréable et stimulant.",
             "user_id": 3,
-            "created_at": "2023-12-22T10:30:00+01:00",
+            "created_at": "2023-12-21T10:30:00+01:00",
             "points": 30,
-            "state": "pending"
+            "state": "pending",
+            "closed_at": false
         },
         {
             "id": "e58e3cc7-2ff8-48bf-8b1d-3bc2d9211f58",
             "title": "Ateliers de Formation Interne",
             "description": "Organiser des ateliers hebdomadaires où les collègues partagent leurs compétences et connaissances.",
             "user_id": 2,
-            "created_at": "2023-12-22T10:45:00+01:00",
+            "created_at": "2023-12-26T10:45:00+01:00",
             "points": 80,
-            "state": "pending"
+            "state": "pending",
+            "closed_at": false
         },
         {
             "id": "d3cae46b-a27b-4276-a169-1ed66d74df12",
             "title": "Tableau de Reconnaissance",
             "description": "Mettre en place un tableau où les employés peuvent écrire des messages de reconnaissance ou de félicitations à leurs collègues.",
             "user_id": 1,
-            "created_at": "2023-12-22T11:00:00+01:00",
+            "created_at": "2023-12-23T11:00:00+01:00",
             "points": 120,
-            "state": "pending"
+            "state": "pending",
+            "closed_at": false
         },
         {
             "id": "9b92df11-c4a8-42f8-9cf7-b7e584617f44",
@@ -75,7 +80,8 @@
             "user_id": 2,
             "created_at": "2023-12-22T11:15:00+01:00",
             "points": 70,
-            "state": "done"
+            "state": "done",
+            "closed_at": "2023-12-24T14:35:00+01:00"
         },
         {
             "id": "4121f0ed-0df6-48c7-a641-4a8b8aeff382",
@@ -84,7 +90,8 @@
             "user_id": 3,
             "created_at": "2023-12-22T11:30:00+01:00",
             "points": 60,
-            "state": "done"
+            "state": "done",
+            "closed_at": "2023-12-25T15:45:00+01:00"
         }
     ]
 }
