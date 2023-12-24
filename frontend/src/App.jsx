@@ -17,6 +17,11 @@ import LoginForm from './components/LoginForm'
 
 /** Pages **/
 import { NoMatch } from './pages/no-match'
+import { Home } from './pages/Home';
+
+/** API **/
+import { setIdeaJSON } from './api/ideas/setIdea';
+import { getIdeasJSON } from './api/ideas/getIdeas';
 
 /** CSS **/
 import './App.css'
@@ -49,36 +54,6 @@ const ideasReducer = (state, action) => {
         throw new Error();
     }
 };
-
-const fetchIdeasJSON = async () => {
-    const response = await fetch("api/ideas", {
-        method: 'GET',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-    });
-    if (!response.ok) {
-        const message = `An error has occured: ${response.status}`;
-        throw new Error(message);
-    }
-    return await response.json();
-}
-
-const setIdeaJSON = async (data) => {
-    const response = await fetch("api/ideas", {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(data)
-    });
-    if (!response.ok) {
-        const message = `An error has occured: ${response.status}`;
-        throw new Error(message);
-    }
-    return await response.json();
-}
-
 
 const App = () => {
 
@@ -119,7 +94,7 @@ const App = () => {
     const handleFetchIdeas = React.useCallback(async () => {
         dispatchIdeas({ type: "IDEAS_FETCH_INIT" });
         try {
-            fetchIdeasJSON().then((response) => {
+            getIdeasJSON().then((response) => {
                 dispatchIdeas({
                     type: "IDEAS_FETCH_SUCCESS",
                     payload: {
@@ -139,7 +114,6 @@ const App = () => {
     const completedIdeas = ideas.data.filter((idea) => idea.state === 'done')
 
     useEffect(() => {
-        console.log("App: useEffect: auth: ", auth);
         handleFetchIdeas();
     }, [handleFetchIdeas]);
 
@@ -152,7 +126,7 @@ const App = () => {
 
                     <main style={{ padding: '16px' }}>
                         <Routes>
-                            <Route exact path="/" element={<div></div>} />
+                            <Route exact path="/" element={<Home ideas={pendingIdeas}/>} />
                             <Route path="/pending-ideas" element={<IdeaList ideas={pendingIdeas} onSubmitIdea={onSubmitIdea}/>} />
                             <Route path="/completed-ideas" element={<IdeaList ideas={completedIdeas} onSubmitIdea={onSubmitIdea}/>} />
                             <Route path="/login" element={<LoginForm />} />

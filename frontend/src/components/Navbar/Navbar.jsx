@@ -46,7 +46,6 @@ const NavBar = () => {
     };
 
     useEffect(() => {
-        console.log("NavBar: useEffect auth", auth);
         if (!auth) {
             navigate("/");
         } else {

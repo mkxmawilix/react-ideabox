@@ -25,6 +25,7 @@ const IdeaSubmissionForm = ({ onSubmitIdea }) => {
                         variant="outlined"
                         fullWidth
                         margin="normal"
+                        required={true}
                         value={title}
                         onChange={(e) => setTitle(e.target.value)}
                     />
@@ -35,6 +36,7 @@ const IdeaSubmissionForm = ({ onSubmitIdea }) => {
                         multiline
                         rows={4}
                         margin="normal"
+                        required={true}
                         value={description}
                         onChange={(e) => setDescription(e.target.value)}
                     />

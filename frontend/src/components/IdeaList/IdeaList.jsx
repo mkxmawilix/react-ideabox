@@ -1,5 +1,4 @@
 import React from "react";
-
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
 import TableCell from '@mui/material/TableCell';
@@ -8,9 +7,9 @@ import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 import { Button } from '@mui/material';
-import { styled } from '@mui/material/styles';
 import KeyboardArrowUp from '@mui/icons-material/KeyboardArrowUp';
 import KeyboardArrowDown from '@mui/icons-material/KeyboardArrowDown';
+import Add from '@mui/icons-material/Add';
 
 /** Components **/
 import IdeaModal from '../IdeaModal';
@@ -23,76 +22,31 @@ import ThumbDown from '../../assets/icons/thumb-down.svg';
 
 /** Hooks **/
 import useAuth from "../../hooks/useAuth";
+import useModal from "../../hooks/useModal";
 
 /** Styles **/
+import { 
+    StyledButtonRight, StyledHeadCellDateCreatedAt, StyledHeadCellTitle, StyledHeadCellDescription,
+    StyledHeadCellPoints, StyledHeadCellVote, StyledTableCellDescription, IdeasContainer
+} from './style';
 
-const StyledButtonRight = styled(Button)({
-    float: 'right',
-});
-
-const StyledTableHeadCell = styled(TableCell)({
-    fontWeight: 'bold',
-    alignItems: 'center',
-    justifyContent: 'center',
-    cursor: 'pointer',
-});
-
-const StyledHeadCellDateCreatedAt = styled(StyledTableHeadCell)({
-    width: '20%',
-    align: 'left',
-});
-
-const StyledHeadCellTitle = styled(StyledTableHeadCell)({
-    width: '20%',
-    align: 'left',
-});
-
-const StyledHeadCellDescription = styled(StyledTableHeadCell)({
-    width: '20%',
-    align: 'left',
-    cursor: 'default',
-});
-
-const StyledTableCellDescription = styled(TableCell)({
-    width: '20%',
-    align: 'left',
-    overflow: 'hidden',
-    textOverflow: 'ellipsis',
-    whiteSpace: 'nowrap',
-    cursor: 'pointer',
-});
-
-const StyledHeadCellPoints = styled(StyledTableHeadCell)({
-    width: '10%',
-});
-
-const StyledHeadCellVote = styled(StyledTableHeadCell)({
-    width: '10%',
-    align: 'right',
-});
 
 
 const IdeaList = ({ ideas, onSubmitIdea }) => {
     const { auth } = useAuth();
 
     // Logic to handle modal state for creation
-    const [modalOpen, setModalOpen] = React.useState(false);
+    const { isModalOpen, modalContent, openModal, closeModal } = useModal();
     const handleOpenModalCreate = () => {
-        setSelectedIdea(null); // Réinitialise l'idée sélectionnée
-        setModalOpen(true);
+        openModal();
     };
-    const handleCloseModal = () => setModalOpen(false);
     const handleSubmit = (idea) => {
         onSubmitIdea(idea);
-        handleCloseModal();
+        closeModal();
     }
 
-    // Logic to handle modal state for update
-    const [selectedIdea, setSelectedIdea] = React.useState(null);
-
     const handleOpenModalRead = (idea) => {
-        setSelectedIdea(idea);
-        setModalOpen(true);
+        openModal(idea);
     };
 
     // Vote Up and Vote Down
@@ -145,14 +99,14 @@ const IdeaList = ({ ideas, onSubmitIdea }) => {
     };
 
     return (
-        <>
+        <IdeasContainer>
             <div>
                 {auth && (
-                    <StyledButtonRight variant="contained" color="primary" onClick={handleOpenModalCreate} align="right">+ Ajouter une Nouvelle Idée</StyledButtonRight>
+                    <StyledButtonRight variant="contained" color="primary" startIcon={<Add />} onClick={handleOpenModalCreate} align="right">Ajouter une Nouvelle Idée</StyledButtonRight>
                 )}
-                <IdeaModal open={modalOpen}
-                    handleClose={handleCloseModal}
-                    selectedIdea={selectedIdea}
+                <IdeaModal isOpen={isModalOpen}
+                    handleClose={closeModal}
+                    idea={modalContent}
                     onSubmitIdea={handleSubmit}
                 />
             </div>
@@ -211,7 +165,7 @@ const IdeaList = ({ ideas, onSubmitIdea }) => {
                     </Table>
                 </TableContainer>
             </div>
-        </>
+        </IdeasContainer>
     );
 };
 

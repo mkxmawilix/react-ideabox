@@ -2,9 +2,15 @@ import { Modal, Box } from '@mui/material';
 import IdeaSubmissionForm from '../IdeaSubmissionForm';
 import PropTypes from 'prop-types';
 
-const IdeaModal = ({ open, handleClose, selectedIdea, onSubmitIdea }) => {
+const IdeaModal = ({ isOpen, handleClose, idea, onSubmitIdea }) => {
+
+    const handleSubmit = (idea) => {
+        onSubmitIdea(idea);
+        handleClose();
+    }
+
     return (
-        <Modal open={open} onClose={handleClose}>
+        <Modal open={isOpen} onClose={handleClose}>
             <Box
                 sx={{
                     position: 'absolute',
@@ -25,21 +31,21 @@ const IdeaModal = ({ open, handleClose, selectedIdea, onSubmitIdea }) => {
                 }}
                 
             >
-                {selectedIdea ? (
+                {idea ? (
                     <div>
-                        <h2>{selectedIdea.title}</h2>
-                        <p className="idea-description">{selectedIdea.description}</p>
+                        <h2>{idea.title}</h2>
+                        <p className="idea-description">{idea.description}</p>
                     </div>
-                ) : (<IdeaSubmissionForm onSubmitIdea={onSubmitIdea} />)}
+                ) : (<IdeaSubmissionForm onSubmitIdea={handleSubmit} />)}
             </Box>
         </Modal>
     );
 }
 
 IdeaModal.propTypes = {
-    open: PropTypes.bool,
+    isOpen: PropTypes.bool,
     handleClose: PropTypes.func,
-    selectedIdea: PropTypes.object,
+    idea: PropTypes.object,
     onSubmitIdea: PropTypes.func,
 };
 
