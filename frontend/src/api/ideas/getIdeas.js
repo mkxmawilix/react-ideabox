@@ -9,5 +9,5 @@ export const getIdeasJSON = async () => {
         const message = `An error has occured: ${response.status}`;
         throw new Error(message);
     }
-    return await response.json();
+    return response.json();
 }

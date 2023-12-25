@@ -130,6 +130,7 @@ const App = () => {
                             <Route path="/pending-ideas" element={<IdeaList ideas={pendingIdeas} onSubmitIdea={onSubmitIdea}/>} />
                             <Route path="/completed-ideas" element={<IdeaList ideas={completedIdeas} onSubmitIdea={onSubmitIdea}/>} />
                             <Route path="/login" element={<LoginForm />} />
+                            <Route path="/register" element={<div>Register</div>} />
                             <Route path="/profile" element={<div>Profile</div>} />
                             <Route path="*" element={<NoMatch />} />
                         </Routes>

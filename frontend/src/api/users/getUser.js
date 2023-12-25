@@ -1,14 +1,13 @@
-export const setIdeaJSON = async (data) => {
-    const response = await fetch("api/ideas", {
-        method: 'POST',
+export const getUserJSON = async (data) => {
+    const response = await fetch(`/api/users?email=${data.email}&password=${data.password}`, {
+        method: 'GET',
         headers: {
             'Content-Type': 'application/json',
         },
-        body: JSON.stringify(data)
     });
     if (!response.ok) {
         const message = `An error has occured: ${response.status}`;
         throw new Error(message);
     }
-    return response.json();
+    return await response.json();
 }

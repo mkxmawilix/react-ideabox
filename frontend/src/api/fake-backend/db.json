@@ -22,6 +22,7 @@
             "token": "FAKE-TOKEN-3"
         }
     ],
+    "authenticated": [],
     "ideas": [
         {
             "id": "09a86a44-3520-4bb6-b26a-00d69e51b69f",

@@ -5,44 +5,41 @@ import PropTypes from 'prop-types';
 
 import AuthContext from './AuthContext';
 
-const fetchUserJSON = async (data) => {
-    const response = await fetch(`/api/users?email=${data.email}&password=${data.password}`, {
-        method: 'GET',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-    });
-    if (!response.ok) {
-        const message = `An error has occured: ${response.status}`;
-        throw new Error(message);
-    }
-    return await response.json();
-}
-
+/** API **/
+import { getUserJSON } from "../api/users/getUser";
+import { isAuthenticated } from "../api/users/isAuthenticated";
+import { setAuthToken } from "../api/tokens/setAuthToken";
+import { deleteAuthToken } from "../api/tokens/deleteAuthToken";
 
 export const AuthProvider = ({ children }) => {
 
     const [auth, setAuth] = useState(false);
     const { getItem, setItem, removeItem } = useLocalStorage();
 
+    const handleError = (error, message) => {
+        console.error(error.message);
+        toast.error(message);
+    };
+
     const signIn = async (data) => {
         try {
-            // FAKE API CALL TO GET USER
-            const authresult = await fetchUserJSON(data).catch(error => {
-                console.error(error.message);
-                toast.error("Login Failed");
-            });
+            // FAKE API CALL
+            const authresult = await getUserJSON(data);
             if (authresult.length > 0) {
-                let userObj = { username: authresult[0].username, token: authresult[0].token};
-                setAuth(true);
-                setItem("user", JSON.stringify({ ...userObj}));
-                toast.success("Login Successfull");
+                let userObj = { userId: authresult[0].id, token: authresult[0].token};
+                const response = await setAuthToken(userObj);
+                if (response) {
+                    setItem("user", JSON.stringify(userObj));
+                    setAuth(true);
+                    toast.success("Login Successful");
+                } else {
+                    toast.error("Login Failed");
+                }
             } else {
                 toast.error("Login Failed");
             }
         } catch (err) {
-            console.error(err);
-            toast.error("Login Failed");
+            handleError(err, "Login Failed");
         }
     };
 
@@ -50,24 +47,45 @@ export const AuthProvider = ({ children }) => {
         try {
             toast.success("Sign Up Successfull");
         } catch (err) {
-            console.error(err);
-            toast.error("An Error Occuered");
+            handleError(err, "An Error Occurred");
         }
     };
 
-    const signOut = () => {
-        setAuth(false);
-        removeItem("user");
-        toast.success("Logout Successfull");
+    const signOut = async () => {
+        try {
+            const userObj = JSON.parse(getItem("user"));
+            const response = await deleteAuthToken(userObj);
+            if (response) {
+                removeItem("user");
+                setAuth(false);
+                toast.success("Logout Successful");
+            } else {
+                toast.error("Logout Failed");
+            }
+        } catch (error) {
+            handleError(error, "Logout Failed");
+        }
     };
 
     useEffect(() => {
-        const userStorage = getItem("user") || null;
-        if (userStorage) {
-            setAuth(true);
-        } else {
-            setAuth(false);
-        }
+        const checkUser = async () => {
+            let userObj = JSON.parse(getItem("user"));
+            if (userObj?.token) {
+                try {
+                    const response = await isAuthenticated({userId: userObj.userId, token: userObj.token});
+                    if (response) {
+                        setAuth(true);
+                    } else {
+                        setAuth(false);
+                    }
+                } catch (error) {
+                    setAuth(false);
+                }
+            } else {
+                setAuth(false);
+            }
+        };
+        checkUser();
     }, []);  // eslint-disable-line react-hooks/exhaustive-deps
 
     const memoedValue = useMemo(

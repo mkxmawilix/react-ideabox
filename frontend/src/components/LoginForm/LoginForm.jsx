@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { TextField, Button, Card, CardContent, Typography, Alert } from '@mui/material';
-import { useNavigate } from 'react-router-dom';
+import { Link as MuiLink } from '@mui/material';
+import { useNavigate, Link} from 'react-router-dom';
 
 import useAuth from "../../hooks/useAuth";
 
@@ -58,6 +59,11 @@ const LoginForm = () => {
                     </Button>
                 </form>
             </CardContent>
+            <div style={{ textAlign: 'center', marginTop: '10px' }}>
+                <Typography variant="body2">
+                    Pas encore de compte ? <MuiLink component={Link} to="/register">Créer un compte</MuiLink>
+                </Typography>
+            </div>
         </Card>
     );
 }
