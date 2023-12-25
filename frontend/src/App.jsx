@@ -14,13 +14,14 @@ import useAuth from "./hooks/useAuth";
 import Navbar from './components/Navbar'
 import IdeaList from './components/IdeaList'
 import LoginForm from './components/LoginForm'
+import RegisterForm from './components/RegisterForm';
 
 /** Pages **/
 import { NoMatch } from './pages/no-match'
 import { Home } from './pages/Home';
 
 /** API **/
-import { setIdeaJSON } from './api/ideas/setIdea';
+import { createIdeaJSON } from './api/ideas/createIdea';
 import { getIdeasJSON } from './api/ideas/getIdeas';
 
 /** CSS **/
@@ -64,15 +65,14 @@ const App = () => {
         isError: false,
     });
     const onSubmitIdea = (idea) => {
-        setIdeaJSON({
+        createIdeaJSON({
             id: uuidv4(),
             created_at: idea.date,
             title: idea.title,
             description: idea.description,
             points: idea.points,
             state: idea.state,
-        }).then((response) => {
-            console.log(response);
+        }).then(() => {
             toast.success("Idea Submitted")
             dispatchIdeas({
                 type: 'SET_IDEA', payload: [...ideas.data, {
@@ -130,7 +130,7 @@ const App = () => {
                             <Route path="/pending-ideas" element={<IdeaList ideas={pendingIdeas} onSubmitIdea={onSubmitIdea}/>} />
                             <Route path="/completed-ideas" element={<IdeaList ideas={completedIdeas} onSubmitIdea={onSubmitIdea}/>} />
                             <Route path="/login" element={<LoginForm />} />
-                            <Route path="/register" element={<div>Register</div>} />
+                            <Route path="/register" element={<RegisterForm />} />
                             <Route path="/profile" element={<div>Profile</div>} />
                             <Route path="*" element={<NoMatch />} />
                         </Routes>

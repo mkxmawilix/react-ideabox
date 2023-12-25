@@ -1,27 +1,5 @@
 {
-    "users": [
-        {
-            "id": "5376eeb9-15fe-4940-9939-f54345d9ab55",
-            "username": "admin",
-            "email": "admin@dev.fr",
-            "password": "admin",
-            "token": "FAKE-TOKEN-1"
-        },
-        {
-            "id": "96b96182-1563-405e-abf6-257abfed2449",
-            "username": "john.doe",
-            "email": "john.doe@dev.fr",
-            "password": "john.doe",
-            "token": "FAKE-TOKEN-2"
-        },
-        {
-            "id": "c5ff9496-6152-4d51-bda8-9e52df235c1a",
-            "username": "jane.doe",
-            "email": "jane.doe@dev.fr",
-            "password": "jane.doe",
-            "token": "FAKE-TOKEN-3"
-        }
-    ],
+    "users": [],
     "authenticated": [],
     "ideas": [
         {

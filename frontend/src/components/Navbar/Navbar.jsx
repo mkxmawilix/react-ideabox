@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { AppBar, Toolbar, Typography, IconButton, Menu, MenuItem, CssBaseline} from '@mui/material';
+import { AppBar, Toolbar, Typography, Menu, MenuItem, CssBaseline, ButtonBase} from '@mui/material';
 import { styled } from '@mui/material/styles';
 import InboxTwoToneIcon from '@mui/icons-material/InboxTwoTone';
 import AccountCircle from '@mui/icons-material/AccountCircle';
@@ -26,7 +26,7 @@ const StyledNavLinks = styled('div')({
 
 
 const NavBar = () => {
-    const { auth, signOut } = useAuth();
+    const { auth, user, signOut } = useAuth();
     const navigate = useNavigate();
 
     const handleLogout = () => {
@@ -48,8 +48,6 @@ const NavBar = () => {
     useEffect(() => {
         if (!auth) {
             navigate("/");
-        } else {
-            navigate("/pending-ideas");
         }
     }, [auth]);
 
@@ -69,17 +67,18 @@ const NavBar = () => {
                     Idées Terminées
                     </StyledLink>
                 </StyledNavLinks>
-                <div style={{ marginLeft: 'auto' }}>
-                    <IconButton
-                        edge="end"
-                        aria-label="Compte de l'utilisateur"
-                        aria-controls="menu-appbar"
-                        aria-haspopup="true"
+                <div style={{ marginLeft: 'auto', display: 'flex', alignItems: 'center' }}>
+                    <ButtonBase
                         onClick={handleProfileMenuOpen}
-                        color="inherit"
+                        style={{ display: 'flex', alignItems: 'center', color: 'inherit' }}
                     >
                         <AccountCircle />
-                    </IconButton>
+                        {user && (
+                            <Typography variant="subtitle1" style={{ marginLeft: '10px' }}>
+                                {user}
+                            </Typography>
+                        )}
+                    </ButtonBase>
                     <Menu
                         id="menu-appbar"
                         anchorEl={anchorEl}

@@ -24,7 +24,7 @@ TODO :
 - [x] Tri des idées par date, titre, nombre de votes
 - [ ] Pouvoir voter pour une idée une fois connecté
 - [ ] Pouvoir commenter une idée une fois connecté
-- [ ] Pouvoir s'inscrire
+- [x] Pouvoir s'inscrire
 - [x] Pouvoir se connecter
 - [x] Pouvoir se déconnecter
 - [ ] Pouvoir modifier son profil

@@ -1,11 +1,14 @@
 import { useState, useEffect, useMemo } from "react";
 import { useLocalStorage } from "../hooks/useLocalStorage";
+import { useNavigate } from 'react-router-dom';
 import toast from 'react-hot-toast';
 import PropTypes from 'prop-types';
 
 import AuthContext from './AuthContext';
 
 /** API **/
+import { createUserJSON } from "../api/users/createUser";
+import { loginUsersJSON } from "../api/users/loginUser";
 import { getUserJSON } from "../api/users/getUser";
 import { isAuthenticated } from "../api/users/isAuthenticated";
 import { setAuthToken } from "../api/tokens/setAuthToken";
@@ -14,38 +17,64 @@ import { deleteAuthToken } from "../api/tokens/deleteAuthToken";
 export const AuthProvider = ({ children }) => {
 
     const [auth, setAuth] = useState(false);
+    const [user, setUser] = useState(null);
     const { getItem, setItem, removeItem } = useLocalStorage();
+
+    const navigate = useNavigate();
 
     const handleError = (error, message) => {
         console.error(error.message);
+        toast.error(message);
+        throw error;
+    };
+
+    const handleSuccess = (message) => {
+        toast.success(message);
+    };
+
+    const handleFailure = (message) => {
         toast.error(message);
     };
 
     const signIn = async (data) => {
         try {
-            // FAKE API CALL
-            const authresult = await getUserJSON(data);
-            if (authresult.length > 0) {
-                let userObj = { userId: authresult[0].id, token: authresult[0].token};
-                const response = await setAuthToken(userObj);
-                if (response) {
+            const response = await loginUsersJSON(data);
+            if (response) {
+                let userObj = { userId: response.user.id, token: response.accessToken, username: response.user.username};
+                const responseAuth = await setAuthToken(userObj);
+                if (responseAuth) {
                     setItem("user", JSON.stringify(userObj));
+                    setUser(response.user.username);
                     setAuth(true);
-                    toast.success("Login Successful");
+                    handleSuccess("Login Successful");
+                    navigate('/', { replace: true });
                 } else {
-                    toast.error("Login Failed");
+                    handleFailure("Login Failed");
                 }
             } else {
-                toast.error("Login Failed");
+                handleFailure("Login Failed");
             }
         } catch (err) {
             handleError(err, "Login Failed");
         }
     };
 
-    const signUp = async (data) => {  // eslint-disable-line no-unused-vars
+    const signUp = async (data) => {
         try {
-            toast.success("Sign Up Successfull");
+            const response = await createUserJSON(data);
+            if (response) {
+                let userObj = { userId: response.user.id, token: response.accessToken};
+                const responseAuth = await setAuthToken(userObj);
+                if (responseAuth) {
+                    setItem("user", JSON.stringify(userObj));
+                    setAuth(true);
+                    setUser(response.user.username);
+                    handleSuccess("Sign Up Successful");
+                    navigate('/', { replace: true });
+                } else {
+                    handleFailure("Login Failed");
+                }
+            }
         } catch (err) {
             handleError(err, "An Error Occurred");
         }
@@ -58,9 +87,11 @@ export const AuthProvider = ({ children }) => {
             if (response) {
                 removeItem("user");
                 setAuth(false);
-                toast.success("Logout Successful");
+                setUser(null);
+                handleSuccess("Logout Successful");
+                navigate('/', { replace: true });
             } else {
-                toast.error("Logout Failed");
+                handleFailure("Logout Failed");
             }
         } catch (error) {
             handleError(error, "Logout Failed");
@@ -74,14 +105,19 @@ export const AuthProvider = ({ children }) => {
                 try {
                     const response = await isAuthenticated({userId: userObj.userId, token: userObj.token});
                     if (response) {
+                        const user = await getUserJSON(userObj.userId);
+                        setUser(user.username);
                         setAuth(true);
                     } else {
+                        setUser(null);
                         setAuth(false);
                     }
                 } catch (error) {
+                    setUser(null);
                     setAuth(false);
                 }
             } else {
+                setUser(null);
                 setAuth(false);
             }
         };
@@ -91,11 +127,12 @@ export const AuthProvider = ({ children }) => {
     const memoedValue = useMemo(
         () => ({
             auth,
+            user,
             signIn,
             signOut,
             signUp,
         }),
-        [auth]
+        [auth, user]
     );
 
     return (

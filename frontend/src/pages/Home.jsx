@@ -2,12 +2,17 @@ import styled from 'styled-components';
 import TopIdeas from '../components/TopIdeas';
 import PropTypes from 'prop-types';
 
+/** Hooks **/
+import useAuth from "../hooks/useAuth";
+
 
 const HomeContainer = styled.div`
     margin: 4em auto;
 `;
 
 const Home = ({ ideas }) => {
+    const { auth, user } = useAuth();
+
     const pendingIdeas = ideas.data.filter(idea => idea.state === "pending");
     const closedIdeas = ideas.data.filter(idea => idea.state === "done");
 
@@ -17,7 +22,11 @@ const Home = ({ ideas }) => {
 
     return (
         <HomeContainer>
-            <h1>Bienvenue sur la Boîte à Idées</h1>
+            {auth ? (
+                <h1>Bienvenue sur la Boîte à Idées, {user}</h1>
+            ) : (
+                <h1>Bienvenue sur la Boîte à Idées</h1>
+            )}
             <section>
                 <TopIdeas ideas={pendingIdeas} sortFunction={sortByPoints} title="Top 3 des idées" count={3} />
                 <TopIdeas ideas={pendingIdeas} sortFunction={sortByCreation} title="3 dernières créées" count={3} />
