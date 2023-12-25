@@ -27,11 +27,11 @@ TODO :
 - [x] Pouvoir s'inscrire
 - [x] Pouvoir se connecter
 - [x] Pouvoir se déconnecter
-- [ ] Pouvoir modifier son profil
+- [x] Pouvoir modifier son profil
 - [ ] Pouvoir supprimer son profil
 - [ ] Pouvoir supprimer son compte
 - [ ] Pouvoir récupérer son mot de passe
-- [ ] Pouvoir modifier son mot de passe
+- [x] Pouvoir modifier son mot de passe
 
 #### Backend
 - [ ] Intégrer la partie "Back" (NodeJS, ExpressJS, MongoDB) quand elle sera disponible

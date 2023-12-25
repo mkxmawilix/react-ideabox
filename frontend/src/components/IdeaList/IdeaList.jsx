@@ -101,7 +101,7 @@ const IdeaList = ({ ideas, onSubmitIdea }) => {
     return (
         <IdeasContainer>
             <div>
-                {auth && (
+                {auth.token && (
                     <StyledButtonRight variant="contained" color="primary" startIcon={<Add />} onClick={handleOpenModalCreate} align="right">Ajouter une Nouvelle Idée</StyledButtonRight>
                 )}
                 <IdeaModal isOpen={isModalOpen}
@@ -152,7 +152,7 @@ const IdeaList = ({ ideas, onSubmitIdea }) => {
                                     </StyledTableCellDescription>
                                     <TableCell>{idea.points}</TableCell>
                                     <TableCell align="right">
-                                        {auth && (
+                                        {auth.token && (
                                             <>
                                                 <Button onClick={() => onClickVoteUp(idea)}><img src={ThumbUp} alt="icon" width={50} height={50}/></Button>
                                                 <Button onClick={() => onClickVoteDown(idea)}><img src={ThumbDown} alt="icon" width={50} height={50} /></Button>

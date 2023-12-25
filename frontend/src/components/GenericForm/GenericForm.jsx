@@ -20,6 +20,7 @@ const GenericForm = ({ title, fields, onSubmit, errorMessage, messageBottom }) =
                             onChange={field.onChange}
                             autoFocus={field.autoFocus || false}
                             required={field.required || false}
+                            InputProps={field.InputProps || {}}
                         />
                     ))}
                     <Button

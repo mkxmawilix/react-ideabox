@@ -1,5 +1,5 @@
-import { useEffect, useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { useState } from 'react';
+import { Link } from 'react-router-dom';
 import { AppBar, Toolbar, Typography, Menu, MenuItem, CssBaseline, ButtonBase} from '@mui/material';
 import { styled } from '@mui/material/styles';
 import InboxTwoToneIcon from '@mui/icons-material/InboxTwoTone';
@@ -26,8 +26,7 @@ const StyledNavLinks = styled('div')({
 
 
 const NavBar = () => {
-    const { auth, user, signOut } = useAuth();
-    const navigate = useNavigate();
+    const { auth, signOut } = useAuth();
 
     const handleLogout = () => {
         handleMenuClose();
@@ -44,12 +43,6 @@ const NavBar = () => {
     const handleMenuClose = () => {
         setAnchorEl(null);
     };
-
-    useEffect(() => {
-        if (!auth) {
-            navigate("/");
-        }
-    }, [auth]);
 
     return (
         <AppBar>
@@ -73,9 +66,9 @@ const NavBar = () => {
                         style={{ display: 'flex', alignItems: 'center', color: 'inherit' }}
                     >
                         <AccountCircle />
-                        {user && (
+                        {auth.token && (
                             <Typography variant="subtitle1" style={{ marginLeft: '10px' }}>
-                                {user}
+                                {auth.user}
                             </Typography>
                         )}
                     </ButtonBase>
@@ -94,7 +87,7 @@ const NavBar = () => {
                         open={isMenuOpen}
                         onClose={handleMenuClose}
                     >
-                        {auth ? (
+                        {auth.token ? (
                             <div>
                                 <MenuItem onClick={handleMenuClose} component={Link} to="/profile">Mon Profil</MenuItem>
                                 <MenuItem onClick={handleLogout}>Déconnexion</MenuItem>

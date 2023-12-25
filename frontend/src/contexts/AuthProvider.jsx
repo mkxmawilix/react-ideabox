@@ -10,14 +10,18 @@ import AuthContext from './AuthContext';
 import { createUserJSON } from "../api/users/createUser";
 import { loginUsersJSON } from "../api/users/loginUser";
 import { getUserJSON } from "../api/users/getUser";
-import { isAuthenticated } from "../api/users/isAuthenticated";
+import { updateUserJSON } from "../api/users/updateUser";
+import { isAuthenticatedJSON } from "../api/users/isAuthenticated";
 import { setAuthToken } from "../api/tokens/setAuthToken";
 import { deleteAuthToken } from "../api/tokens/deleteAuthToken";
 
 export const AuthProvider = ({ children }) => {
 
-    const [auth, setAuth] = useState(false);
-    const [user, setUser] = useState(null);
+    const [auth, setAuth] = useState({
+        token: false,
+        user: null,
+        userId: null,
+    });
     const { getItem, setItem, removeItem } = useLocalStorage();
 
     const navigate = useNavigate();
@@ -44,8 +48,7 @@ export const AuthProvider = ({ children }) => {
                 const responseAuth = await setAuthToken(userObj);
                 if (responseAuth) {
                     setItem("user", JSON.stringify(userObj));
-                    setUser(response.user.username);
-                    setAuth(true);
+                    setAuth({ token: response.accessToken, user: response.user.username, userId: response.user.id });
                     handleSuccess("Login Successful");
                     navigate('/', { replace: true });
                 } else {
@@ -67,8 +70,7 @@ export const AuthProvider = ({ children }) => {
                 const responseAuth = await setAuthToken(userObj);
                 if (responseAuth) {
                     setItem("user", JSON.stringify(userObj));
-                    setAuth(true);
-                    setUser(response.user.username);
+                    setAuth({ token: response.accessToken, user: response.user.username, userId: response.user.id });
                     handleSuccess("Sign Up Successful");
                     navigate('/', { replace: true });
                 } else {
@@ -83,11 +85,13 @@ export const AuthProvider = ({ children }) => {
     const signOut = async () => {
         try {
             const userObj = JSON.parse(getItem("user"));
+            if (!userObj) {
+                return;
+            }
             const response = await deleteAuthToken(userObj);
             if (response) {
                 removeItem("user");
-                setAuth(false);
-                setUser(null);
+                setAuth({ token: false, user: null, userId: null });
                 handleSuccess("Logout Successful");
                 navigate('/', { replace: true });
             } else {
@@ -98,27 +102,71 @@ export const AuthProvider = ({ children }) => {
         }
     };
 
+    const getUser = async (userId) => {
+        try {
+            const response = await getUserJSON(userId);
+            if (response) {
+                return response;
+            } else {
+                handleFailure("User Not Found");
+            }
+        } catch (error) {
+            handleError(error, "User Not Found");
+        }
+    };
+
+    const updateUserinfo = async (data) => {
+        try {
+            const response = await updateUserJSON({userId: data.auth.userId, username: data.userInfo.username});
+            if (response) {
+                setAuth({ token: data.auth.token, user: response.username, userId: data.auth.userId });
+                const userObj = JSON.parse(getItem("user"));
+                userObj.username = data.userInfo.username;
+                setItem("user", JSON.stringify(userObj));
+                handleSuccess("Information Updated");
+                navigate('/profile', { replace: true });
+            } else {
+                handleFailure("Information Update Failed");
+            }
+        } catch (error) {
+            handleError(error, "Information Update Failed");
+        }
+    };
+
+    const updatePassword = async (data) => {
+        try {
+            const response = await updateUserJSON({userId: data.auth.userId, password: data.newPassword});
+            if (response) {
+                handleSuccess("Password Updated");
+                signOut();
+                navigate('/', { replace: true });
+            } else {
+                handleFailure("Password Update Failed");
+            }
+        } catch (error) {
+            handleError(error, "Password Update Failed");
+        }
+    };
+
     useEffect(() => {
         const checkUser = async () => {
             let userObj = JSON.parse(getItem("user"));
             if (userObj?.token) {
                 try {
-                    const response = await isAuthenticated({userId: userObj.userId, token: userObj.token});
+                    const response = await isAuthenticatedJSON({userId: userObj.userId, token: userObj.token});
                     if (response) {
                         const user = await getUserJSON(userObj.userId);
-                        setUser(user.username);
-                        setAuth(true);
-                    } else {
-                        setUser(null);
-                        setAuth(false);
+                        setAuth({ token: userObj.token, user: user.username, userId: userObj.userId });
+                    } else {  // invalid token, user not authenticated or token expired
+                        removeItem("user");
+                        setAuth({ token: false, user: null, userId: null });
                     }
                 } catch (error) {
-                    setUser(null);
-                    setAuth(false);
+                    removeItem("user");
+                    setAuth({ token: false, user: null, userId: null });
                 }
             } else {
-                setUser(null);
-                setAuth(false);
+                setAuth({ token: false, user: null, userId: null });
             }
         };
         checkUser();
@@ -127,12 +175,14 @@ export const AuthProvider = ({ children }) => {
     const memoedValue = useMemo(
         () => ({
             auth,
-            user,
             signIn,
             signOut,
             signUp,
+            getUser,
+            updateUserinfo,
+            updatePassword,
         }),
-        [auth, user]
+        [auth]
     );
 
     return (

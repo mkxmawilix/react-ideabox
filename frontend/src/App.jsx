@@ -19,10 +19,14 @@ import RegisterForm from './components/RegisterForm';
 /** Pages **/
 import { NoMatch } from './pages/no-match'
 import { Home } from './pages/Home';
+import { UserProfile } from './pages/UserProfile';
 
 /** API **/
 import { createIdeaJSON } from './api/ideas/createIdea';
 import { getIdeasJSON } from './api/ideas/getIdeas';
+
+/** Routes **/
+import PrivateRoutes from './services/Routes/PrivateRoutes';
 
 /** CSS **/
 import './App.css'
@@ -58,7 +62,7 @@ const ideasReducer = (state, action) => {
 
 const App = () => {
 
-    const {auth, signOut} = useAuth();
+    const {signOut} = useAuth();
     const [ideas, dispatchIdeas] = React.useReducer(ideasReducer, {
         data: [],
         isLoading: false,
@@ -122,7 +126,7 @@ const App = () => {
             <Router>
                 <AuthProvider>
                     <Toaster />
-                    <Navbar auth={auth} signOut={signOut}/>
+                    <Navbar signOut={signOut}/>
 
                     <main style={{ padding: '16px' }}>
                         <Routes>
@@ -131,7 +135,9 @@ const App = () => {
                             <Route path="/completed-ideas" element={<IdeaList ideas={completedIdeas} onSubmitIdea={onSubmitIdea}/>} />
                             <Route path="/login" element={<LoginForm />} />
                             <Route path="/register" element={<RegisterForm />} />
-                            <Route path="/profile" element={<div>Profile</div>} />
+                            <Route element={<PrivateRoutes />}>
+                                <Route path="/profile" element={<UserProfile />} />
+                            </Route>
                             <Route path="*" element={<NoMatch />} />
                         </Routes>
                     </main>

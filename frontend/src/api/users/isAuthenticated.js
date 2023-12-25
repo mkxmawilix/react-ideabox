@@ -1,4 +1,4 @@
-export const isAuthenticated = async ({ userId, token }) => {
+export const isAuthenticatedJSON = async ({ userId, token }) => {
     if (!userId || !token) {
         return;
     }

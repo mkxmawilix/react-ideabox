@@ -11,7 +11,7 @@ const HomeContainer = styled.div`
 `;
 
 const Home = ({ ideas }) => {
-    const { auth, user } = useAuth();
+    const { auth } = useAuth();
 
     const pendingIdeas = ideas.data.filter(idea => idea.state === "pending");
     const closedIdeas = ideas.data.filter(idea => idea.state === "done");
@@ -22,8 +22,8 @@ const Home = ({ ideas }) => {
 
     return (
         <HomeContainer>
-            {auth ? (
-                <h1>Bienvenue sur la Boîte à Idées, {user}</h1>
+            {auth.token ? (
+                <h1>Bienvenue sur la Boîte à Idées, {auth.user}</h1>
             ) : (
                 <h1>Bienvenue sur la Boîte à Idées</h1>
             )}
