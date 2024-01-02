@@ -2,10 +2,6 @@ import React, { useEffect } from 'react'
 import { Routes, Route } from 'react-router-dom';
 import toast, { Toaster } from 'react-hot-toast';
 import { v4 as uuidv4 } from 'uuid';
-import { BrowserRouter as Router } from 'react-router-dom'
-
-/** Contexts **/
-import { AuthProvider } from "./contexts/AuthProvider";
 
 /** Hooks **/
 import useAuth from "./hooks/useAuth";
@@ -24,6 +20,7 @@ import { UserProfile } from './pages/UserProfile';
 /** API **/
 import { createIdeaJSON } from './api/ideas/createIdea';
 import { getIdeasJSON } from './api/ideas/getIdeas';
+import { deleteIdeaJSON } from './api/ideas/deleteIdea';
 
 /** Routes **/
 import PrivateRoutes from './services/Routes/PrivateRoutes';
@@ -55,6 +52,8 @@ const ideasReducer = (state, action) => {
         };
     case 'SET_IDEA':
         return { ...state, data: action.payload };
+    case 'DELETE_IDEA':
+        return { ...state, data: action.payload };
     default:
         throw new Error();
     }
@@ -62,7 +61,10 @@ const ideasReducer = (state, action) => {
 
 const App = () => {
 
-    const {signOut} = useAuth();
+    {/* Auth */}
+    const { auth, signOut } = useAuth();
+
+    {/* Ideas */}
     const [ideas, dispatchIdeas] = React.useReducer(ideasReducer, {
         data: [],
         isLoading: false,
@@ -76,6 +78,7 @@ const App = () => {
             description: idea.description,
             points: idea.points,
             state: idea.state,
+            userId: auth.userId,
         }).then(() => {
             toast.success("Idea Submitted")
             dispatchIdeas({
@@ -86,6 +89,7 @@ const App = () => {
                     description: idea.description,
                     points: idea.points,
                     state: idea.state,
+                    userId: auth.userId,
                 }]
             });
         }
@@ -93,6 +97,24 @@ const App = () => {
             console.log(error);
             toast.error("An Error Occured")
         });
+    }
+    const onDeleteIdea = (idea) => {
+        if (idea.state === 'done') {
+            toast.error("Cannot Delete Completed Idea");
+            return;
+        }
+        if (idea.userId !== auth.userId) {
+            toast.error("Cannot Delete Idea You Did Not Create");
+            return;
+        }
+        deleteIdeaJSON(idea).then(() => {
+            toast.success("Idea Deleted");
+            const ideasList = ideas.data.filter((item) => item.id !== idea.id);
+            dispatchIdeas({ type: 'DELETE_IDEA', payload: ideasList });
+        }).catch((error) => {
+            console.log(error);
+            toast.error("An Error Occured")
+        })
     }
 
     const handleFetchIdeas = React.useCallback(async () => {
@@ -117,32 +139,30 @@ const App = () => {
     const pendingIdeas = ideas.data.filter((idea) => idea.state !== 'done')
     const completedIdeas = ideas.data.filter((idea) => idea.state === 'done')
 
+    {/* Effects */}
+
     useEffect(() => {
         handleFetchIdeas();
     }, [handleFetchIdeas]);
 
     return (
         <>
-            <Router>
-                <AuthProvider>
-                    <Toaster />
-                    <Navbar signOut={signOut}/>
+            <Toaster />
+            <Navbar signOut={signOut}/>
 
-                    <main style={{ padding: '16px' }}>
-                        <Routes>
-                            <Route exact path="/" element={<Home ideas={ideas}/>} />
-                            <Route path="/pending-ideas" element={<IdeaList ideas={pendingIdeas} onSubmitIdea={onSubmitIdea}/>} />
-                            <Route path="/completed-ideas" element={<IdeaList ideas={completedIdeas} onSubmitIdea={onSubmitIdea}/>} />
-                            <Route path="/login" element={<LoginForm />} />
-                            <Route path="/register" element={<RegisterForm />} />
-                            <Route element={<PrivateRoutes />}>
-                                <Route path="/profile" element={<UserProfile />} />
-                            </Route>
-                            <Route path="*" element={<NoMatch />} />
-                        </Routes>
-                    </main>
-                </AuthProvider>
-            </Router>
+            <main style={{ padding: '16px' }}>
+                <Routes>
+                    <Route exact path="/" element={<Home ideas={ideas}/>} />
+                    <Route path="/pending-ideas" element={<IdeaList ideas={pendingIdeas} onSubmitIdea={onSubmitIdea} onDeleteIdea={onDeleteIdea}/>} />
+                    <Route path="/completed-ideas" element={<IdeaList ideas={completedIdeas} onSubmitIdea={onSubmitIdea}/>} />
+                    <Route path="/login" element={<LoginForm />} />
+                    <Route path="/register" element={<RegisterForm />} />
+                    <Route element={<PrivateRoutes />}>
+                        <Route path="/profile" element={<UserProfile />} />
+                    </Route>
+                    <Route path="*" element={<NoMatch />} />
+                </Routes>
+            </main>
         </>
     );
 }

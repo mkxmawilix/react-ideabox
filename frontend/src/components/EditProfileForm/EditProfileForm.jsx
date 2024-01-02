@@ -55,7 +55,7 @@ const EditProfileForm = () => {
         getUser(auth.userId).then((response) => {
             setUserInfo({ username: response.username, email: response.email });
         });
-    }, [auth]);
+    }, [auth, getUser]);
 
     return (
         <ProfileFormContainer>

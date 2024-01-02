@@ -3,74 +3,67 @@
     "authenticated": [],
     "ideas": [
         {
-            "id": "09a86a44-3520-4bb6-b26a-00d69e51b69f",
+            "id": "9c7c2f8b-bb8f-4ed6-b21d-aa6fd8b96b71",
+            "created_at": "2024-01-05T12:48:01.744Z",
             "title": "Pause Café Interactive",
             "description": "Organiser des pauses café quotidiennes où les collègues peuvent discuter de sujets non professionnels pour renforcer les liens.",
-            "user_id": 1,
-            "created_at": "2023-12-19T10:00:00+01:00",
-            "points": 50,
-            "state": "pending",
-            "closed_at": false
-        },
-        {
-            "id": "f1e4c6d5-0410-4a4b-9986-92fd98d9356d",
-            "title": "Réunions Matinales Courtes",
-            "description": "Commencer chaque journée avec une brève réunion de 15 minutes pour partager les objectifs, les nouvelles importantes et discuter des défis à venir.",
-            "user_id": 2,
-            "created_at": "2023-12-24T10:15:00+01:00",
-            "points": 100,
-            "state": "pending",
-            "closed_at": false
-        },
-        {
-            "id": "c1a048ad-9d94-4622-bfa3-99f8853a7186",
-            "title": "Espace de Détente",
-            "description": "La création d'un espace de détente au bureau offre un havre de paix pour les employés, leur permettant de se ressourcer et de se déconnecter brièvement du stress du travail. \n\nCet espace, équipé de jeux, de livres et de canapés confortables, favorise le bien-être mental et physique, ce qui peut se traduire par une augmentation de la productivité et de la créativité. En outre, cet espace offre une opportunité pour des interactions informelles entre collègues, renforçant ainsi les relations interpersonnelles et la cohésion d'équipe. \n\nEn somme, l'aménagement d'un tel espace contribue à créer un environnement de travail plus agréable et stimulant.",
-            "user_id": 3,
-            "created_at": "2023-12-21T10:30:00+01:00",
-            "points": 30,
-            "state": "pending",
-            "closed_at": false
-        },
-        {
-            "id": "e58e3cc7-2ff8-48bf-8b1d-3bc2d9211f58",
-            "title": "Ateliers de Formation Interne",
-            "description": "Organiser des ateliers hebdomadaires où les collègues partagent leurs compétences et connaissances.",
-            "user_id": 2,
-            "created_at": "2023-12-26T10:45:00+01:00",
-            "points": 80,
-            "state": "pending",
-            "closed_at": false
-        },
-        {
-            "id": "d3cae46b-a27b-4276-a169-1ed66d74df12",
-            "title": "Tableau de Reconnaissance",
-            "description": "Mettre en place un tableau où les employés peuvent écrire des messages de reconnaissance ou de félicitations à leurs collègues.",
-            "user_id": 1,
-            "created_at": "2023-12-23T11:00:00+01:00",
-            "points": 120,
-            "state": "pending",
-            "closed_at": false
-        },
-        {
-            "id": "9b92df11-c4a8-42f8-9cf7-b7e584617f44",
-            "title": "Sessions de Brainstorming Hebdomadaires",
-            "description": "Organiser des sessions de brainstorming hebdomadaires pour encourager l'innovation et la créativité au sein de l'équipe.",
-            "user_id": 2,
-            "created_at": "2023-12-22T11:15:00+01:00",
-            "points": 70,
+            "points": 0,
             "state": "done",
-            "closed_at": "2023-12-24T14:35:00+01:00"
+            "user_id": 1
         },
         {
-            "id": "4121f0ed-0df6-48c7-a641-4a8b8aeff382",
+            "id": "bb675b5e-afdb-4575-ada0-7395ce849b31",
+            "created_at": "2024-01-05T12:48:34.717Z",
+            "title": "Espace de Détente",
+            "description": "La création d'un espace de détente au bureau offre un havre de paix pour les employés, leur permettant de se ressourcer et de se déconnecter brièvement du stress du travail. \\n\\nCet espace, équipé de jeux, de livres et de canapés confortables, favorise le bien-être mental et physique, ce qui peut se traduire par une augmentation de la productivité et de la créativité. En outre, cet espace offre une opportunité pour des interactions informelles entre collègues, renforçant ainsi les relations interpersonnelles et la cohésion d'équipe.\n\nEn somme, l'aménagement d'un tel espace contribue à créer un environnement de travail plus agréable et stimulant.",
+            "points": 0,
+            "state": "pending",
+            "user_id": 2
+        },
+        {
+            "id": "5e2641fb-dbe0-41fb-b662-ccf52544136c",
+            "created_at": "2024-01-05T12:49:00.424Z",
             "title": "Programme de Mentorat Interne",
             "description": "Mettre en place un programme de mentorat pour permettre aux employés plus expérimentés de partager leurs connaissances avec les nouveaux arrivants.",
-            "user_id": 3,
-            "created_at": "2023-12-22T11:30:00+01:00",
-            "points": 60,
+            "points": 0,
+            "state": "pending",
+            "user_id": 2
+        },
+        {
+            "id": "c8cfd07c-a5e2-4e3f-af12-9ba21af0323c",
+            "created_at": "2024-01-05T12:49:16.020Z",
+            "title": "Tableau de Reconnaissance",
+            "description": "Mettre en place un tableau où les employés peuvent écrire des messages de reconnaissance ou de félicitations à leurs collègues.",
+            "points": 0,
+            "state": "pending",
+            "user_id": 4
+        },
+        {
+            "id": "a7e5eab1-3efd-4aa0-a4a3-0d9ba2c94d10",
+            "created_at": "2024-01-05T12:49:39.188Z",
+            "title": "Réunions Matinales Courtes",
+            "description": "Commencer chaque journée avec une brève réunion de 15 minutes pour partager les objectifs, les nouvelles importantes et discuter des défis à venir.",
+            "points": 0,
+            "state": "pending",
+            "user_id": 1
+        },
+        {
+            "id": "413cca46-4a50-47e1-acd7-a758fa6aa23c",
+            "created_at": "2024-01-05T12:50:01.857Z",
+            "title": "Sessions de Brainstorming Hebdomadaires",
+            "description": "Organiser des sessions de brainstorming hebdomadaires pour encourager l'innovation et la créativité au sein de l'équipe.",
+            "points": 0,
             "state": "done",
-            "closed_at": "2023-12-25T15:45:00+01:00"
+            "user_id": 3
+        },
+        {
+            "id": "947a6164-2245-4afc-ab7d-3814ede3ed4c",
+            "created_at": "2024-01-05T12:50:15.305Z",
+            "title": "Ateliers de Formation Interne",
+            "description": "Organiser des ateliers hebdomadaires où les collègues partagent leurs compétences et connaissances.",
+            "points": 0,
+            "state": "done",
+            "user_id": 1
         }
     ]
 }

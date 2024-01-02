@@ -7,35 +7,44 @@ import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 import { Button } from '@mui/material';
+import Dialog from '@mui/material/Dialog';
+import DialogActions from '@mui/material/DialogActions';
+import DialogContent from '@mui/material/DialogContent';
+import Typography from '@mui/material/Typography';
+import DialogTitle from '@mui/material/DialogTitle';
 import KeyboardArrowUp from '@mui/icons-material/KeyboardArrowUp';
 import KeyboardArrowDown from '@mui/icons-material/KeyboardArrowDown';
 import Add from '@mui/icons-material/Add';
+import PropTypes from "prop-types";
 
 /** Components **/
 import IdeaModal from '../IdeaModal';
 
-import PropTypes from "prop-types";
-
 /** SVG **/
-import ThumbUp from '../../assets/icons/thumb-up.svg';
-import ThumbDown from '../../assets/icons/thumb-down.svg';
+import ThumbUpIdea from '../../assets/icons/thumb-up-idea.svg';
+import ThumbDownIdea from '../../assets/icons/thumb-down-idea.svg';
+import DeleteIdea from '../../assets/icons/delete-idea.svg';
+import EditIdea from '../../assets/icons/edit-idea.svg';
 
 /** Hooks **/
 import useAuth from "../../hooks/useAuth";
 import useModal from "../../hooks/useModal";
+import useAlertDialog from "../../hooks/useAlertDialog";
 
 /** Styles **/
 import { 
     StyledButtonRight, StyledHeadCellDateCreatedAt, StyledHeadCellTitle, StyledHeadCellDescription,
-    StyledHeadCellPoints, StyledHeadCellVote, StyledTableCellDescription, IdeasContainer
+    StyledHeadCellPoints, StyledTableCellDescription, StyledHeadCellActions, IdeasContainer
 } from './style';
 
+/** Utils **/
+import { renderTextWithNewLineInSpan } from '../../services/Format/Text/index';
 
 
-const IdeaList = ({ ideas, onSubmitIdea }) => {
+const IdeaList = ({ ideas, onSubmitIdea, onDeleteIdea }) => {
     const { auth } = useAuth();
 
-    // Logic to handle modal state for creation
+    {/* Logic to handle modal state for creation and reading */}
     const { isModalOpen, modalContent, openModal, closeModal } = useModal();
     const handleOpenModalCreate = () => {
         openModal();
@@ -49,7 +58,7 @@ const IdeaList = ({ ideas, onSubmitIdea }) => {
         openModal(idea);
     };
 
-    // Vote Up and Vote Down
+    {/* Vote Up and Vote Down */}
     const onClickVoteUp = (row) => {
         console.log(row);
     }
@@ -57,8 +66,13 @@ const IdeaList = ({ ideas, onSubmitIdea }) => {
         console.log(row);
     }
 
-    // Sorting
-    const [orderDirection, setOrderDirection] = React.useState('asc');
+    {/* Modify */}
+    const onClickModify = (row) => {
+        console.log(row);
+    }
+
+    {/* Sorting */}
+    const [orderDirection, setOrderDirection] = React.useState('desc');
     const [orderBy, setOrderBy] = React.useState('created_at');
 
     const handleRequestSort = (property) => {
@@ -85,22 +99,27 @@ const IdeaList = ({ ideas, onSubmitIdea }) => {
         ) : null;
     };
 
-    // Render
-    const renderNewLineText = (text) => {
-        if (!text) {
-            return null;
-        }
-        return text.split('\n').map((line, index) => (
-            <span key={index}>
-                {line}
-                <br />
-            </span>
-        ));
+    {/* Alert Dialog : Deletion */}
+    const { isDialogOpen, dialogProps, openDialog, closeDialog, confirmDialog } = useAlertDialog();
+
+    const handleClickOpenDeleteDialog = (idea) => {
+        openDialog(
+            'Confirmer la suppression', 
+            'Êtes-vous sûr de vouloir supprimer cette idée ?',
+            `\n${idea.title}`,
+            () => handleConfirmDelete(idea)
+        );
+    };
+
+    const handleConfirmDelete = (idea) => {
+        onDeleteIdea(idea);
+        closeDialog();
     };
 
     return (
         <IdeasContainer>
             <div>
+                {/* Create and Read Modal */}
                 {auth.token && (
                     <StyledButtonRight variant="contained" color="primary" startIcon={<Add />} onClick={handleOpenModalCreate} align="right">Ajouter une Nouvelle Idée</StyledButtonRight>
                 )}
@@ -110,6 +129,7 @@ const IdeaList = ({ ideas, onSubmitIdea }) => {
                     onSubmitIdea={handleSubmit}
                 />
             </div>
+            {/* Ideas Table */}
             <div style={{ height: 400, width: '100%'}}>
                 <TableContainer component={Paper}>
                     <Table sx={{ tableLayout: 'fixed' }} aria-label="simple table">
@@ -131,7 +151,11 @@ const IdeaList = ({ ideas, onSubmitIdea }) => {
                                         <div>Points</div> <div>{sortIcon('points')}</div>
                                     </div>
                                 </StyledHeadCellPoints>
-                                <StyledHeadCellVote>Vote</StyledHeadCellVote>
+                                {
+                                    auth.token && auth.userId && (
+                                        <StyledHeadCellActions>Actions</StyledHeadCellActions>
+                                    )
+                                }
                             </TableRow>
                         </TableHead>
                         <TableBody>
@@ -139,26 +163,49 @@ const IdeaList = ({ ideas, onSubmitIdea }) => {
                                 <TableRow
                                     key={idea.id}
                                     sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
-                                    onClick={() => handleOpenModalRead(idea)}
                                 >
-                                    <TableCell component="th" scope="row" align="left">
+                                    <TableCell component="th" scope="row" align="left" onClick={() => handleOpenModalRead(idea)}>
                                         {new Date(idea.created_at).toLocaleString('fr-FR')}
                                     </TableCell>
-                                    <TableCell component="th" scope="row" align="left">
+                                    <TableCell component="th" scope="row" align="left" onClick={() => handleOpenModalRead(idea)}>
                                         {idea.title}
                                     </TableCell>
-                                    <StyledTableCellDescription>
-                                        {renderNewLineText(idea.description)}
+                                    <StyledTableCellDescription onClick={() => handleOpenModalRead(idea)}>
+                                        {renderTextWithNewLineInSpan(idea.description)}
                                     </StyledTableCellDescription>
-                                    <TableCell>{idea.points}</TableCell>
-                                    <TableCell align="right">
-                                        {auth.token && (
-                                            <>
-                                                <Button onClick={() => onClickVoteUp(idea)}><img src={ThumbUp} alt="icon" width={50} height={50}/></Button>
-                                                <Button onClick={() => onClickVoteDown(idea)}><img src={ThumbDown} alt="icon" width={50} height={50} /></Button>
-                                            </>
+                                    <TableCell onClick={() => handleOpenModalRead(idea)}>{idea.points}</TableCell>
+                                    {
+                                        auth.token && auth.userId && idea.state !== "done" && (
+                                            <TableCell align="right" sx={{padding: "0 0 0 0"}}>
+                                                <div style={{display:'flex', justifyContent:'flex-start'}}>
+                                                    <div>
+                                                        <Button onClick={() => onClickVoteUp(idea)}><img src={ThumbUpIdea} alt="icon" width={30} height={30}/></Button>
+                                                        <Button onClick={() => onClickVoteDown(idea)}><img src={ThumbDownIdea} alt="icon" width={30} height={30} /></Button>
+                                                    </div>
+                                                    {auth.userId === idea.userId && (
+                                                        <div>
+                                                            <Button onClick={() => handleClickOpenDeleteDialog(idea)}><img src={DeleteIdea} alt="icon" width={30} height={30} /></Button>
+                                                            <Dialog open={isDialogOpen} onClose={closeDialog}>
+                                                                <DialogTitle>{dialogProps.title}</DialogTitle>
+                                                                <DialogContent>
+                                                                    <Typography>
+                                                                        {dialogProps.message}
+                                                                    </Typography>
+                                                                    <Typography style={{whiteSpace: 'pre-line'}}>
+                                                                        {dialogProps.description}
+                                                                    </Typography>
+                                                                </DialogContent>
+                                                                <DialogActions>
+                                                                    <Button onClick={closeDialog}>Annuler</Button>
+                                                                    <Button onClick={confirmDialog} color="primary" autoFocus>Confirmer</Button>
+                                                                </DialogActions>
+                                                            </Dialog>
+                                                            <Button onClick={() => onClickModify(idea)}> <img src={EditIdea} alt="icon" width={30} height={30} /></Button>
+                                                        </div>
+                                                    )}
+                                                </div>
+                                            </TableCell>
                                         )}
-                                    </TableCell>
                                 </TableRow>
                             ))}
                         </TableBody>
@@ -172,6 +219,7 @@ const IdeaList = ({ ideas, onSubmitIdea }) => {
 IdeaList.propTypes = {
     ideas: PropTypes.array,
     onSubmitIdea: PropTypes.func,
+    onDeleteIdea: PropTypes.func,
 };
 
 export { IdeaList };

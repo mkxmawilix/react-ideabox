@@ -14,5 +14,5 @@ export const loginUsersJSON = async (data) => {
         const message = `An error has occured: ${response.status}`;
         throw new Error(message);
     }
-    return response.json();
+    return await response.json();
 }

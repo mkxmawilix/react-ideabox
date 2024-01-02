@@ -9,5 +9,5 @@ export const getUserJSON = async (userId) => {
         const message = `An error has occurred: ${response.status}`;
         throw new Error(message);
     }
-    return response.json();
+    return await response.json();
 }

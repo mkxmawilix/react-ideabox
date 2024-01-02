@@ -155,8 +155,8 @@ export const AuthProvider = ({ children }) => {
                 try {
                     const response = await isAuthenticatedJSON({userId: userObj.userId, token: userObj.token});
                     if (response) {
-                        const user = await getUserJSON(userObj.userId);
-                        setAuth({ token: userObj.token, user: user.username, userId: userObj.userId });
+                        const user = await getUserJSON(response[0].userId);
+                        setAuth({ token: userObj.token, user: user.username, userId: response[0].userId });
                     } else {  // invalid token, user not authenticated or token expired
                         removeItem("user");
                         setAuth({ token: false, user: null, userId: null });

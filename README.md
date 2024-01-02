@@ -17,7 +17,7 @@ TODO :
 #### Frontend
 - [x] Création d'une idée (titre, description) une fois connecté
 - [ ] Modification d'une idée une fois connecté
-- [ ] Suppression d'une idée une fois connecté
+- [x] Suppression d'une idée une fois connecté
 - [x] Affichage des idées
 - [x] Affichage d'une idée au clic sur la liste
 - [x] Affichage "Top" des idées : 3 idées les plus votées, 3 idées les plus récentes, 3 idées dernièrement cloturées

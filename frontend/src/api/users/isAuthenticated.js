@@ -13,5 +13,5 @@ export const isAuthenticatedJSON = async ({ userId, token }) => {
         const message = `An error has occurred: ${response.status}`;
         throw new Error(message);
     }
-    return response.json();
+    return await response.json();
 }

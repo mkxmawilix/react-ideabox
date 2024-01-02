@@ -15,12 +15,12 @@ const StyledTableHeadCell = styled(TableCell)({
 });
 
 const StyledHeadCellDateCreatedAt = styled(StyledTableHeadCell)({
-    width: '20%',
+    width: '5%',
     align: 'left',
 });
 
 const StyledHeadCellTitle = styled(StyledTableHeadCell)({
-    width: '20%',
+    width: '10%',
     align: 'left',
 });
 
@@ -40,10 +40,10 @@ const StyledTableCellDescription = styled(TableCell)({
 });
 
 const StyledHeadCellPoints = styled(StyledTableHeadCell)({
-    width: '10%',
+    width: '5%',
 });
 
-const StyledHeadCellVote = styled(StyledTableHeadCell)({
+const StyledHeadCellActions = styled(StyledTableHeadCell)({
     width: '10%',
     align: 'right',
 });
@@ -56,5 +56,5 @@ const IdeasContainer = styledComponent.div`
 export {
     StyledButtonRight, StyledTableHeadCell, StyledHeadCellDateCreatedAt,
     StyledHeadCellTitle, StyledHeadCellDescription, StyledTableCellDescription,
-    StyledHeadCellPoints, StyledHeadCellVote, IdeasContainer
+    StyledHeadCellPoints, StyledHeadCellActions, IdeasContainer
 }

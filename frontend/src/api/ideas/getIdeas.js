@@ -9,5 +9,12 @@ export const getIdeasJSON = async () => {
         const message = `An error has occured: ${response.status}`;
         throw new Error(message);
     }
-    return response.json();
+    // change userId to user_id to avoid collection deletion by json-server
+    const data = await response.json();
+    for (const obj of data) {
+        obj.userId = obj.user_id;
+        delete obj.user_id;
+    }
+
+    return data;
 }
