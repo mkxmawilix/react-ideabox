@@ -1,4 +1,4 @@
-import React from "react";
+import { useState } from "react";
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
 import TableCell from '@mui/material/TableCell';
@@ -41,21 +41,20 @@ import {
 import { renderTextWithNewLineInSpan } from '../../services/Format/Text/index';
 
 
-const IdeaList = ({ ideas, onSubmitIdea, onDeleteIdea }) => {
+const IdeaList = ({ ideas, onSubmitIdea, onUpdateIdea, onDeleteIdea }) => {
     const { auth } = useAuth();
 
-    {/* Logic to handle modal state for creation and reading */}
+    {/* Logic to handle modal state for creation, reading and modification */}
     const { isModalOpen, modalContent, openModal, closeModal } = useModal();
     const handleOpenModalCreate = () => {
         openModal();
     };
-    const handleSubmit = (idea) => {
-        onSubmitIdea(idea);
-        closeModal();
-    }
-
     const handleOpenModalRead = (idea) => {
         openModal(idea);
+    };
+    const handleCloseModal = () => {
+        closeModal();
+        setIsEditing(false);
     };
 
     {/* Vote Up and Vote Down */}
@@ -66,14 +65,26 @@ const IdeaList = ({ ideas, onSubmitIdea, onDeleteIdea }) => {
         console.log(row);
     }
 
-    {/* Modify */}
-    const onClickModify = (row) => {
-        console.log(row);
+    {/* Createion & Modification */}
+    const [isEditing, setIsEditing] = useState(false);
+    const handleIdeaSubmit = (idea) => {
+        onSubmitIdea(idea);
+        closeModal();
+    }
+    const handleIdeaUpdate = (idea) => {
+        onUpdateIdea(idea);
+        closeModal();
+        setIsEditing(false);
+    }
+    const onClickModify = (idea) => {
+        console.log(idea);
+        setIsEditing(true);
+        openModal(idea);
     }
 
     {/* Sorting */}
-    const [orderDirection, setOrderDirection] = React.useState('desc');
-    const [orderBy, setOrderBy] = React.useState('created_at');
+    const [orderDirection, setOrderDirection] = useState('desc');
+    const [orderBy, setOrderBy] = useState('created_at');
 
     const handleRequestSort = (property) => {
         const isAsc = orderBy === property && orderDirection === 'asc';
@@ -124,9 +135,11 @@ const IdeaList = ({ ideas, onSubmitIdea, onDeleteIdea }) => {
                     <StyledButtonRight variant="contained" color="primary" startIcon={<Add />} onClick={handleOpenModalCreate} align="right">Ajouter une Nouvelle Idée</StyledButtonRight>
                 )}
                 <IdeaModal isOpen={isModalOpen}
-                    handleClose={closeModal}
+                    handleClose={handleCloseModal}
                     idea={modalContent}
-                    onSubmitIdea={handleSubmit}
+                    onSubmitIdea={handleIdeaSubmit}
+                    onUpdateIdea={handleIdeaUpdate}
+                    isEditing={isEditing}
                 />
             </div>
             {/* Ideas Table */}
@@ -219,6 +232,7 @@ const IdeaList = ({ ideas, onSubmitIdea, onDeleteIdea }) => {
 IdeaList.propTypes = {
     ideas: PropTypes.array,
     onSubmitIdea: PropTypes.func,
+    onUpdateIdea: PropTypes.func,
     onDeleteIdea: PropTypes.func,
 };
 

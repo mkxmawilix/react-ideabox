@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useCallback } from 'react'
 import { Routes, Route } from 'react-router-dom';
 import toast, { Toaster } from 'react-hot-toast';
 import { v4 as uuidv4 } from 'uuid';
@@ -21,6 +21,7 @@ import { UserProfile } from './pages/UserProfile';
 import { createIdeaJSON } from './api/ideas/createIdea';
 import { getIdeasJSON } from './api/ideas/getIdeas';
 import { deleteIdeaJSON } from './api/ideas/deleteIdea';
+import { updateIdeaJSON } from './api/ideas/updateIdea';
 
 /** Routes **/
 import PrivateRoutes from './services/Routes/PrivateRoutes';
@@ -54,6 +55,8 @@ const ideasReducer = (state, action) => {
         return { ...state, data: action.payload };
     case 'DELETE_IDEA':
         return { ...state, data: action.payload };
+    case 'UPDATE_IDEA':
+        return { ...state, data: state.data.map((item) => item.id === action.payload.id ? action.payload : item) };
     default:
         throw new Error();
     }
@@ -70,7 +73,7 @@ const App = () => {
         isLoading: false,
         isError: false,
     });
-    const onSubmitIdea = (idea) => {
+    const onSubmitIdea = useCallback((idea) => {
         createIdeaJSON({
             id: uuidv4(),
             created_at: idea.date,
@@ -97,8 +100,21 @@ const App = () => {
             console.log(error);
             toast.error("An Error Occured")
         });
-    }
-    const onDeleteIdea = (idea) => {
+    }, [dispatchIdeas, ideas.data, auth.userId]);
+    const onUpdateIdea = useCallback((idea) => {
+        if (idea.userId !== auth.userId) {
+            toast.error("Cannot Update Idea You Did Not Create");
+            return;
+        }
+        updateIdeaJSON(idea).then(() => {
+            toast.success("Idea Updated");
+            dispatchIdeas({ type: 'UPDATE_IDEA', payload: idea });
+        }).catch((error) => {
+            console.log(error);
+            toast.error("An Error Occured")
+        });
+    }, [dispatchIdeas, auth.userId]);
+    const onDeleteIdea = useCallback((idea) => {
         if (idea.state === 'done') {
             toast.error("Cannot Delete Completed Idea");
             return;
@@ -115,7 +131,7 @@ const App = () => {
             console.log(error);
             toast.error("An Error Occured")
         })
-    }
+    }, [dispatchIdeas, ideas.data, auth.userId]);
 
     const handleFetchIdeas = React.useCallback(async () => {
         dispatchIdeas({ type: "IDEAS_FETCH_INIT" });
@@ -153,7 +169,7 @@ const App = () => {
             <main style={{ padding: '16px' }}>
                 <Routes>
                     <Route exact path="/" element={<Home ideas={ideas}/>} />
-                    <Route path="/pending-ideas" element={<IdeaList ideas={pendingIdeas} onSubmitIdea={onSubmitIdea} onDeleteIdea={onDeleteIdea}/>} />
+                    <Route path="/pending-ideas" element={<IdeaList ideas={pendingIdeas} onSubmitIdea={onSubmitIdea} onUpdateIdea={onUpdateIdea} onDeleteIdea={onDeleteIdea}/>} />
                     <Route path="/completed-ideas" element={<IdeaList ideas={completedIdeas} onSubmitIdea={onSubmitIdea}/>} />
                     <Route path="/login" element={<LoginForm />} />
                     <Route path="/register" element={<RegisterForm />} />

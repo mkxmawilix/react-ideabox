@@ -3,14 +3,17 @@ import { Button, TextField, Card, CardContent, Typography } from '@mui/material'
 
 import PropTypes from 'prop-types';
 
-const IdeaSubmissionForm = ({ onSubmitIdea }) => {
-    const [title, setTitle] = useState('');
-    const [description, setDescription] = useState('');
+const IdeaSubmissionForm = ({ onSubmitIdea, onUpdateIdea, existingIdea, isEditing }) => {
+    const [title, setTitle] = useState(isEditing ? existingIdea.title : '');
+    const [description, setDescription] = useState(isEditing ? existingIdea.description : '');
 
     const handleSubmit = (event) => {
         event.preventDefault();
-
-        onSubmitIdea({ title: title, description: description, points: 0, state: 'pending', date: new Date().toISOString()});
+        if (isEditing) {
+            onUpdateIdea({ ...existingIdea, title: title, description: description });
+        } else {
+            onSubmitIdea({ title: title, description: description, points: 0, state: 'pending', date: new Date().toISOString()});
+        }
         setTitle('');
         setDescription('');
     };
@@ -49,6 +52,9 @@ const IdeaSubmissionForm = ({ onSubmitIdea }) => {
 
 IdeaSubmissionForm.propTypes = {
     onSubmitIdea: PropTypes.func,
+    onUpdateIdea: PropTypes.func,
+    existingIdea: PropTypes.object,
+    isEditing: PropTypes.bool,
 };
 
 export { IdeaSubmissionForm };
