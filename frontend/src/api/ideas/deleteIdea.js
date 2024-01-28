@@ -1,7 +1,8 @@
 import { isObjectList } from '../../services/Object';
 
 const deleteIdeaRequest = async (ideaId) => {
-    const response = await fetch(`api/ideas/${ideaId}`, {
+    const url = `http://localhost:3000/api/ideas/${ideaId}`;
+    const response = await fetch(url, {
         method: 'DELETE',
         headers: {
             'Content-Type': 'application/json',

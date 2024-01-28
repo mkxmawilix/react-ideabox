@@ -1,5 +1,6 @@
 export const getIdeasJSON = async () => {
-    const response = await fetch("api/ideas", {
+    const url = "http://localhost:3000/api/ideas";
+    const response = await fetch(url, {
         method: 'GET',
         headers: {
             'Content-Type': 'application/json',
@@ -18,3 +19,23 @@ export const getIdeasJSON = async () => {
 
     return data;
 }
+
+export const getIdeaJSON = async (ideaId) => {
+    if (!ideaId) {
+        throw new Error('No idea ID provided');
+    }
+    const url = `http://localhost:3000/api/ideas?id=${ideaId}`;
+    const response = await fetch(url, {
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+    });
+
+    if (!response.ok) {
+        const message = `An error has occurred: ${response.status}`;
+        throw new Error(message);
+    }
+
+    return await response.json();
+};

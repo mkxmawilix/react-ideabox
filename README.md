@@ -28,10 +28,15 @@ TODO :
 - [x] Pouvoir se connecter
 - [x] Pouvoir se déconnecter
 - [x] Pouvoir modifier son profil
+- [ ] Pouvoir mettre une photo de profil (upload)
 - [ ] Pouvoir supprimer son profil
 - [ ] Pouvoir supprimer son compte
 - [ ] Pouvoir récupérer son mot de passe
 - [x] Pouvoir modifier son mot de passe
+- [x] Pouvoir commenter un message sur une idées une fois connecté
+- [x] Pouvoir consulter les commentaires pour une idée
+- [ ] Pouvoir voter pour un message sur une idées une fois connecté
+
 
 #### Backend
 - [ ] Intégrer la partie "Back" (NodeJS, ExpressJS, MongoDB) quand elle sera disponible

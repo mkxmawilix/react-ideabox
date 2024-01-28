@@ -12,7 +12,7 @@ const IdeaSubmissionForm = ({ onSubmitIdea, onUpdateIdea, existingIdea, isEditin
         if (isEditing) {
             onUpdateIdea({ ...existingIdea, title: title, description: description });
         } else {
-            onSubmitIdea({ title: title, description: description, points: 0, state: 'pending', date: new Date().toISOString()});
+            onSubmitIdea({ title: title, description: description});
         }
         setTitle('');
         setDescription('');

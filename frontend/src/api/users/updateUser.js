@@ -18,7 +18,8 @@ export const updateUserJSON = async (data) => {
     if (data.password) {
         newData.password = data.password;
     }
-    const response = await fetch(`api/users/${data.userId}`, {
+    const url = `http://localhost:3000/api/users/${data.userId}`;
+    const response = await fetch(url, {
         method: 'PATCH',
         headers: {
             'Content-Type': 'application/json',

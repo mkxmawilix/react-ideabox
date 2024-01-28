@@ -9,12 +9,13 @@ export const updateIdeaJSON = async (data) => {
         throw new Error("No description provided");
     }
 
-    let patchData = {
+    const url = `http://localhost:3000/api/ideas/${data.id}`;
+    const patchData = {
         title: data.title,
         description: data.description,
         updated_at: new Date().toISOString(),
     };
-    const response = await fetch(`api/ideas/${data.id}`, {
+    const response = await fetch(url, {
         method: "PATCH",
         headers: {
             "Content-Type": "application/json",
@@ -25,8 +26,5 @@ export const updateIdeaJSON = async (data) => {
         const message = `An error has occured: ${response.status}`;
         throw new Error(message);
     }
-    response.json().then((data) => {
-        console.log(data);
-    });
-    return response;
+    return await response.json();
 };

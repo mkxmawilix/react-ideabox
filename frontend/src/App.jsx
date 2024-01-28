@@ -1,7 +1,6 @@
 import React, { useEffect, useCallback } from 'react'
 import { Routes, Route } from 'react-router-dom';
 import toast, { Toaster } from 'react-hot-toast';
-import { v4 as uuidv4 } from 'uuid';
 
 /** Hooks **/
 import useAuth from "./hooks/useAuth";
@@ -11,6 +10,7 @@ import Navbar from './components/Navbar'
 import IdeaList from './components/IdeaList'
 import LoginForm from './components/LoginForm'
 import RegisterForm from './components/RegisterForm';
+import IdeaDetails from './components/IdeaDetails';
 
 /** Pages **/
 import { NoMatch } from './pages/no-match'
@@ -74,26 +74,15 @@ const App = () => {
         isError: false,
     });
     const onSubmitIdea = useCallback((idea) => {
-        createIdeaJSON({
-            id: uuidv4(),
-            created_at: idea.date,
+        const newIdea = {
             title: idea.title,
             description: idea.description,
-            points: idea.points,
-            state: idea.state,
             userId: auth.userId,
-        }).then(() => {
+        };
+        createIdeaJSON(newIdea).then(() => {
             toast.success("Idea Submitted")
             dispatchIdeas({
-                type: 'SET_IDEA', payload: [...ideas.data, {
-                    id: uuidv4(),
-                    created_at: idea.date,
-                    title: idea.title,
-                    description: idea.description,
-                    points: idea.points,
-                    state: idea.state,
-                    userId: auth.userId,
-                }]
+                type: 'SET_IDEA', payload: [...ideas.data, newIdea]
             });
         }
         ).catch((error) => {
@@ -174,6 +163,7 @@ const App = () => {
                     <Route path="/login" element={<LoginForm />} />
                     <Route path="/register" element={<RegisterForm />} />
                     <Route element={<PrivateRoutes />}>
+                        <Route path="/idea/:ideaId" element={<IdeaDetails />} />
                         <Route path="/profile" element={<UserProfile />} />
                     </Route>
                     <Route path="*" element={<NoMatch />} />

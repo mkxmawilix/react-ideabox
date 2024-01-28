@@ -16,6 +16,7 @@ import KeyboardArrowUp from '@mui/icons-material/KeyboardArrowUp';
 import KeyboardArrowDown from '@mui/icons-material/KeyboardArrowDown';
 import Add from '@mui/icons-material/Add';
 import PropTypes from "prop-types";
+import { NavLink } from "react-router-dom";
 
 /** Components **/
 import IdeaModal from '../IdeaModal';
@@ -32,7 +33,7 @@ import useModal from "../../hooks/useModal";
 import useAlertDialog from "../../hooks/useAlertDialog";
 
 /** Styles **/
-import { 
+import {
     StyledButtonRight, StyledHeadCellDateCreatedAt, StyledHeadCellTitle, StyledHeadCellDescription,
     StyledHeadCellPoints, StyledTableCellDescription, StyledHeadCellActions, IdeasContainer
 } from './style';
@@ -44,7 +45,7 @@ import { renderTextWithNewLineInSpan } from '../../services/Format/Text/index';
 const IdeaList = ({ ideas, onSubmitIdea, onUpdateIdea, onDeleteIdea }) => {
     const { auth } = useAuth();
 
-    {/* Logic to handle modal state for creation, reading and modification */}
+    {/* Logic to handle modal state for creation, reading and modification */ }
     const { isModalOpen, modalContent, openModal, closeModal } = useModal();
     const handleOpenModalCreate = () => {
         openModal();
@@ -57,7 +58,7 @@ const IdeaList = ({ ideas, onSubmitIdea, onUpdateIdea, onDeleteIdea }) => {
         setIsEditing(false);
     };
 
-    {/* Vote Up and Vote Down */}
+    {/* Vote Up and Vote Down */ }
     const onClickVoteUp = (row) => {
         console.log(row);
     }
@@ -65,7 +66,7 @@ const IdeaList = ({ ideas, onSubmitIdea, onUpdateIdea, onDeleteIdea }) => {
         console.log(row);
     }
 
-    {/* Createion & Modification */}
+    {/* Createion & Modification */ }
     const [isEditing, setIsEditing] = useState(false);
     const handleIdeaSubmit = (idea) => {
         onSubmitIdea(idea);
@@ -77,12 +78,11 @@ const IdeaList = ({ ideas, onSubmitIdea, onUpdateIdea, onDeleteIdea }) => {
         setIsEditing(false);
     }
     const onClickModify = (idea) => {
-        console.log(idea);
         setIsEditing(true);
         openModal(idea);
     }
 
-    {/* Sorting */}
+    {/* Sorting */ }
     const [orderDirection, setOrderDirection] = useState('desc');
     const [orderBy, setOrderBy] = useState('created_at');
 
@@ -110,12 +110,12 @@ const IdeaList = ({ ideas, onSubmitIdea, onUpdateIdea, onDeleteIdea }) => {
         ) : null;
     };
 
-    {/* Alert Dialog : Deletion */}
+    {/* Alert Dialog : Deletion */ }
     const { isDialogOpen, dialogProps, openDialog, closeDialog, confirmDialog } = useAlertDialog();
 
     const handleClickOpenDeleteDialog = (idea) => {
         openDialog(
-            'Confirmer la suppression', 
+            'Confirmer la suppression',
             'Êtes-vous sûr de vouloir supprimer cette idée ?',
             `\n${idea.title}`,
             () => handleConfirmDelete(idea)
@@ -143,24 +143,24 @@ const IdeaList = ({ ideas, onSubmitIdea, onUpdateIdea, onDeleteIdea }) => {
                 />
             </div>
             {/* Ideas Table */}
-            <div style={{ height: 400, width: '100%'}}>
+            <div style={{ height: 400, width: '100%' }}>
                 <TableContainer component={Paper}>
                     <Table sx={{ tableLayout: 'fixed' }} aria-label="simple table">
                         <TableHead>
                             <TableRow>
                                 <StyledHeadCellDateCreatedAt onClick={() => handleRequestSort('created_at')}>
-                                    <div style={{display:'flex'}}>
+                                    <div style={{ display: 'flex' }}>
                                         <div>Date d&apos;ajout</div> <div>{sortIcon('created_at')}</div>
                                     </div>
                                 </StyledHeadCellDateCreatedAt>
                                 <StyledHeadCellTitle onClick={() => handleRequestSort('title')}>
-                                    <div style={{display:'flex'}}>
+                                    <div style={{ display: 'flex' }}>
                                         <div>Titre</div> <div>{sortIcon('title')}</div>
                                     </div>
                                 </StyledHeadCellTitle>
                                 <StyledHeadCellDescription>Description</StyledHeadCellDescription>
                                 <StyledHeadCellPoints onClick={() => handleRequestSort('points')}>
-                                    <div style={{display:'flex'}}>
+                                    <div style={{ display: 'flex' }}>
                                         <div>Points</div> <div>{sortIcon('points')}</div>
                                     </div>
                                 </StyledHeadCellPoints>
@@ -181,7 +181,9 @@ const IdeaList = ({ ideas, onSubmitIdea, onUpdateIdea, onDeleteIdea }) => {
                                         {new Date(idea.created_at).toLocaleString('fr-FR')}
                                     </TableCell>
                                     <TableCell component="th" scope="row" align="left" onClick={() => handleOpenModalRead(idea)}>
-                                        {idea.title}
+                                        <NavLink to={`/idea/${idea.id}`}>
+                                            {idea.title}
+                                        </NavLink>
                                     </TableCell>
                                     <StyledTableCellDescription onClick={() => handleOpenModalRead(idea)}>
                                         {renderTextWithNewLineInSpan(idea.description)}
@@ -189,10 +191,10 @@ const IdeaList = ({ ideas, onSubmitIdea, onUpdateIdea, onDeleteIdea }) => {
                                     <TableCell onClick={() => handleOpenModalRead(idea)}>{idea.points}</TableCell>
                                     {
                                         auth.token && auth.userId && idea.state !== "done" && (
-                                            <TableCell align="right" sx={{padding: "0 0 0 0"}}>
-                                                <div style={{display:'flex', justifyContent:'flex-start'}}>
+                                            <TableCell align="right" sx={{ padding: "0 0 0 0" }}>
+                                                <div style={{ display: 'flex', justifyContent: 'flex-start' }}>
                                                     <div>
-                                                        <Button onClick={() => onClickVoteUp(idea)}><img src={ThumbUpIdea} alt="icon" width={30} height={30}/></Button>
+                                                        <Button onClick={() => onClickVoteUp(idea)}><img src={ThumbUpIdea} alt="icon" width={30} height={30} /></Button>
                                                         <Button onClick={() => onClickVoteDown(idea)}><img src={ThumbDownIdea} alt="icon" width={30} height={30} /></Button>
                                                     </div>
                                                     {auth.userId === idea.userId && (
@@ -204,7 +206,7 @@ const IdeaList = ({ ideas, onSubmitIdea, onUpdateIdea, onDeleteIdea }) => {
                                                                     <Typography>
                                                                         {dialogProps.message}
                                                                     </Typography>
-                                                                    <Typography style={{whiteSpace: 'pre-line'}}>
+                                                                    <Typography style={{ whiteSpace: 'pre-line' }}>
                                                                         {dialogProps.description}
                                                                     </Typography>
                                                                 </DialogContent>

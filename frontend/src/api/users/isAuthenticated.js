@@ -3,7 +3,8 @@ export const isAuthenticatedJSON = async ({ userId, token }) => {
         return;
     }
     const params = new URLSearchParams({ userId, token });
-    const response = await fetch(`api/authenticated?${params.toString()}`, {
+    const url = `http://localhost:3000/api/authenticated?${params.toString()}`;
+    const response = await fetch(url, {
         method: 'GET',
         headers: {
             'Content-Type': 'application/json',
