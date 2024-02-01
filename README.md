@@ -36,6 +36,7 @@ TODO :
 - [x] Pouvoir commenter un message sur une idées une fois connecté
 - [x] Pouvoir consulter les commentaires pour une idée
 - [ ] Pouvoir voter pour un message sur une idées une fois connecté
+- [ ] Mettre en place la règle de calcul des points pour les idées (en fonction de l'ancienneté, du nombre de votes, du nombre de commentaires et d'idées postées cloturées ?)
 
 
 #### Backend

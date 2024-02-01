@@ -117,7 +117,7 @@ export const AuthProvider = ({ children }) => {
 
     const updateUserinfo = async (data) => {
         try {
-            const response = await updateUserJSON({userId: data.auth.userId, username: data.userInfo.username});
+            const response = await updateUserJSON({userId: data.auth.userId, username: data.userInfo.username, avatar: data.userInfo.avatar});
             if (response) {
                 setAuth({ token: data.auth.token, user: response.username, userId: data.auth.userId });
                 const userObj = JSON.parse(getItem("user"));

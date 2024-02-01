@@ -1,7 +1,11 @@
 import { useState } from 'react';
 import useAuth from "../../hooks/useAuth";
 
+/** Components **/
 import GenericForm from '../GenericForm';
+
+/** Services **/
+import { generateAvatar } from '../../services/Image';
 
 const RegisterForm = () => {
     const { signUp } = useAuth();
@@ -18,8 +22,11 @@ const RegisterForm = () => {
             if (password !== passwordConfirm) {
                 throw new Error("Les mots de passe ne correspondent pas");
             }
+            {/* Generate an avatar from the user's initials */}
+            const initials = username.split(' ').map(name => name[0]).join('');
+            const initialAvatar = generateAvatar(initials);
             const created_at = new Date().toISOString();
-            await signUp({ email, password, username, created_at });
+            await signUp({ email, password, username, created_at, avatar: initialAvatar });
         } catch (err) {
             setError(err.message);
         }
