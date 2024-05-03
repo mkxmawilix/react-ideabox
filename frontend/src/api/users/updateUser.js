@@ -1,16 +1,15 @@
-import { getUserJSON } from "./getUser";
+import apiClient from '../../services/Api/apiClient';
+import { getUserProfileJSON } from "./getUser";
 
 export const updateUserJSON = async (data) => {
     if (!data || !data.userId) {
         return;
     }
-    const user = await getUserJSON(data.userId);
+    const user = await getUserProfileJSON(data.userId);
     if (!user) {
         throw new Error("Invalid user");
     }
-    if (user.token !== data.token) {
-        throw new Error("Invalid token");
-    }
+
     const newData = {};
     if (data.username) {
         newData.username = data.username;
@@ -21,21 +20,18 @@ export const updateUserJSON = async (data) => {
     if (data.avatar) {
         newData.avatar = data.avatar;
     }
-    const url = `http://localhost:3000/api/users/${data.userId}`;
-    const response = await fetch(url, {
-        method: 'PATCH',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(newData)
-    });
-    if (!response.ok && response.status === 400) {
-        let message = await response.json();
-        throw new Error(`${message}`);
+    try {
+        const response = await apiClient.patch(`/user/${data.userId}`, newData);
+        return response.data;
+    } catch (error) {
+        if (error.response) {
+            const { status, data } = error.response;
+            const message = data.message || `An error has occurred: ${status}`;
+            throw new Error(message);
+        } else if (error.request) {
+            throw new Error("No response received from the server.");
+        } else {
+            throw new Error(error.message || "An unexpected error occurred.");
+        }
     }
-    if (!response.ok) {
-        const message = `An error has occured: ${response.status}`;
-        throw new Error(message);
-    }
-    return await response.json();
 }

@@ -9,11 +9,13 @@ import AuthContext from './AuthContext';
 /** API **/
 import { createUserJSON } from "../api/users/createUser";
 import { loginUsersJSON } from "../api/users/loginUser";
-import { getUserJSON } from "../api/users/getUser";
+import { getUserJSON, getUserProfileJSON } from "../api/users/getUser";
 import { updateUserJSON } from "../api/users/updateUser";
-import { isAuthenticatedJSON } from "../api/users/isAuthenticated";
-import { setAuthToken } from "../api/tokens/setAuthToken";
-import { deleteAuthToken } from "../api/tokens/deleteAuthToken";
+import { updatePasswordJSON } from "../api/users/updatePassword";
+
+/** Services **/
+import { getAuthToken } from "../services/Auth/authToken";
+import { isTokenValid } from "../services/Auth/authToken";
 
 export const AuthProvider = ({ children }) => {
 
@@ -40,20 +42,22 @@ export const AuthProvider = ({ children }) => {
         toast.error(message);
     };
 
-    const signIn = async (data) => {
+    const signIn = async ({ email, password }) => {
         try {
-            const response = await loginUsersJSON(data);
+            const response = await loginUsersJSON({ email, password });
             if (response) {
-                let userObj = { userId: response.user.id, token: response.accessToken, username: response.user.username};
-                const responseAuth = await setAuthToken(userObj);
-                if (responseAuth) {
-                    setItem("user", JSON.stringify(userObj));
-                    setAuth({ token: response.accessToken, user: response.user.username, userId: response.user.id });
-                    handleSuccess("Login Successful");
-                    navigate('/', { replace: true });
-                } else {
-                    handleFailure("Login Failed");
+                const authHeader = response.token;
+                if (!authHeader) {
+                    handleFailure("Sign In Failed");
+                    return;
                 }
+                const { username, id: userId } = response.user;
+                let token = getAuthToken(authHeader);
+                let userObj = { userId: userId, token: token };
+                setItem("user", JSON.stringify(userObj));
+                setAuth({ token: token, user: username, userId: userId });
+                handleSuccess("Login Successful");
+                navigate('/', { replace: true });
             } else {
                 handleFailure("Login Failed");
             }
@@ -62,20 +66,22 @@ export const AuthProvider = ({ children }) => {
         }
     };
 
-    const signUp = async (data) => {
+    const signUp = async ({ email, password, username, avatar }) => {
         try {
-            const response = await createUserJSON(data);
+            const response = await createUserJSON({ email, password, username, avatar });
             if (response) {
-                let userObj = { userId: response.user.id, token: response.accessToken};
-                const responseAuth = await setAuthToken(userObj);
-                if (responseAuth) {
-                    setItem("user", JSON.stringify(userObj));
-                    setAuth({ token: response.accessToken, user: response.user.username, userId: response.user.id });
-                    handleSuccess("Sign Up Successful");
-                    navigate('/', { replace: true });
-                } else {
-                    handleFailure("Login Failed");
+                const authHeader = response.token;
+                if (!authHeader) {
+                    handleFailure("Sign Up Failed");
+                    return;
                 }
+                const { username, id: userId } = response.user;
+                let token = getAuthToken(authHeader);
+                let userObj = { userId: userId, token: token };
+                setItem("user", JSON.stringify(userObj));
+                setAuth({ token: token, user: username, userId: userId });
+                handleSuccess("Sign Up Successful");
+                navigate('/', { replace: true });
             }
         } catch (err) {
             handleError(err, "An Error Occurred");
@@ -88,23 +94,18 @@ export const AuthProvider = ({ children }) => {
             if (!userObj) {
                 return;
             }
-            const response = await deleteAuthToken(userObj);
-            if (response) {
-                removeItem("user");
-                setAuth({ token: false, user: null, userId: null });
-                handleSuccess("Logout Successful");
-                navigate('/', { replace: true });
-            } else {
-                handleFailure("Logout Failed");
-            }
+            removeItem("user");
+            setAuth({ token: false, user: null, userId: null });
+            handleSuccess("Logout Successful");
+            navigate('/', { replace: true });
         } catch (error) {
             handleError(error, "Logout Failed");
         }
     };
 
-    const getUser = async (userId) => {
+    const getUserInfo = async (userId) => {
         try {
-            const response = await getUserJSON(userId);
+            const response = await getUserProfileJSON(userId);
             if (response) {
                 return response;
             } else {
@@ -115,13 +116,14 @@ export const AuthProvider = ({ children }) => {
         }
     };
 
-    const updateUserinfo = async (data) => {
+    const updateUserinfo = async ({ auth, userInfo }) => {
         try {
-            const response = await updateUserJSON({userId: data.auth.userId, username: data.userInfo.username, avatar: data.userInfo.avatar});
-            if (response) {
-                setAuth({ token: data.auth.token, user: response.username, userId: data.auth.userId });
+            const response = await updateUserJSON({ userId: auth.userId, username: userInfo.username, avatar: userInfo.avatar });
+            if (response && response.user) {
+                const { user: { username, userId } } = response;
+                setAuth({ token: auth.token, user: username, userId: userId });
                 const userObj = JSON.parse(getItem("user"));
-                userObj.username = data.userInfo.username;
+                userObj.username = userInfo.username;
                 setItem("user", JSON.stringify(userObj));
                 handleSuccess("Information Updated");
                 navigate('/profile', { replace: true });
@@ -133,10 +135,15 @@ export const AuthProvider = ({ children }) => {
         }
     };
 
-    const updatePassword = async (data) => {
+    const updatePassword = async ({auth, currentPassword, newPassword}) => {
         try {
-            const response = await updateUserJSON({userId: data.auth.userId, password: data.newPassword});
-            if (response) {
+            const response = await updatePasswordJSON({ userId: auth.userId, currentPassword: currentPassword, newPassword: newPassword });
+            if (response && response.token) {
+                const token = getAuthToken(response.token);
+                const userObj = JSON.parse(getItem("user"));
+                userObj.token = token;
+                setItem("user", JSON.stringify(userObj));
+                setAuth({ token: token, user: auth.user, userId: auth.userId });
                 handleSuccess("Password Updated");
                 signOut();
                 navigate('/', { replace: true });
@@ -153,10 +160,10 @@ export const AuthProvider = ({ children }) => {
             let userObj = JSON.parse(getItem("user"));
             if (userObj?.token) {
                 try {
-                    const response = await isAuthenticatedJSON({userId: userObj.userId, token: userObj.token});
-                    if (response) {
-                        const user = await getUserJSON(response[0].userId);
-                        setAuth({ token: userObj.token, user: user.username, userId: response[0].userId });
+                    if (isTokenValid(userObj.token, userObj.userId)) {
+                        const response = await getUserJSON(userObj.userId);
+                        const { user: { username, id: userId } } = response;
+                        setAuth({ token: userObj.token, user: username, userId: userId });
                     } else {  // invalid token, user not authenticated or token expired
                         removeItem("user");
                         setAuth({ token: false, user: null, userId: null });
@@ -178,7 +185,7 @@ export const AuthProvider = ({ children }) => {
             signIn,
             signOut,
             signUp,
-            getUser,
+            getUserInfo,
             updateUserinfo,
             updatePassword,
         }),

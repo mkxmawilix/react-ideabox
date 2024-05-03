@@ -74,15 +74,15 @@ const App = () => {
         isError: false,
     });
     const onSubmitIdea = useCallback((idea) => {
-        const newIdea = {
+        createIdeaJSON({
             title: idea.title,
             description: idea.description,
             userId: auth.userId,
-        };
-        createIdeaJSON(newIdea).then(() => {
+        }).then((response) => {
             toast.success("Idea Submitted")
+            const { idea } = response;
             dispatchIdeas({
-                type: 'SET_IDEA', payload: [...ideas.data, newIdea]
+                type: 'SET_IDEA', payload: [...ideas.data, idea]
             });
         }
         ).catch((error) => {

@@ -17,7 +17,7 @@ const Home = ({ ideas }) => {
     const closedIdeas = ideas.data.filter(idea => idea.state === "done");
 
     const sortByPoints = (a, b) => b.points - a.points;
-    const sortByCreation = (a, b) => new Date(b.created_at) - new Date(a.created_at);
+    const sortByCreation = (a, b) => new Date(b.createdAt) - new Date(a.createdAt);
     const sortByClosure = (a, b) => new Date(b.closed_at) - new Date(a.closed_at);
 
     return (

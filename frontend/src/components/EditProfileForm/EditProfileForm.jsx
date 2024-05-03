@@ -15,7 +15,7 @@ import { ProfileFormContainer } from './style';
 import { resizeImage } from '../../services/Image';
 
 const EditProfileForm = () => {
-    const { auth, updateUserinfo, getUser } = useAuth();
+    const { auth, updateUserinfo, getUserInfo } = useAuth();
 
     const [initialUserInfo, setInitialUserInfo] = useState({ username: '', email: '', avatar: '' });
     const [userInfo, setUserInfo] = useState({ username: '', email: '', avatar: '' });
@@ -68,12 +68,13 @@ const EditProfileForm = () => {
         if (!auth) {
             return;
         }
-        getUser(auth.userId).then((response) => {
-            const userData = { username: response.username, email: response.email, avatar: response.avatar };
+        getUserInfo(auth.userId).then((response) => {
+            const { user } = response;
+            const userData = { username: user.username, email: user.email, avatar: user.avatar };
             setUserInfo(userData);
             setInitialUserInfo(userData);
         });
-    }, [auth, getUser]);
+    }, [auth, getUserInfo]);
 
     return (
         <ProfileFormContainer>

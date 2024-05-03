@@ -5,7 +5,7 @@ export const createMessageJSON = async (data) => {
     if (!data.content) {
         throw new Error("No content provided");
     }
-    const url = "http://localhost:3030/api/messages";
+    const url = "http://localhost:3040/api/messages";
     const response = await fetch(url, {
         method: "POST",
         headers: {

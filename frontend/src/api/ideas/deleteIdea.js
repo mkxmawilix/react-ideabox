@@ -1,18 +1,24 @@
 import { isObjectList } from '../../services/Object';
+import apiClient from '../../services/Api/apiClient';
 
 const deleteIdeaRequest = async (ideaId) => {
-    const url = `http://localhost:3000/api/ideas/${ideaId}`;
-    const response = await fetch(url, {
-        method: 'DELETE',
-        headers: {
-            'Content-Type': 'application/json',
+    try {
+        const response = await apiClient.delete(`/idea/${ideaId}`);
+        return response.data;
+    } catch (error) {
+        if (error.response) {
+            const { status, data } = error.response;
+            if (status === 400) {
+                throw new Error(data.message || "Invalid request.");
+            } else {
+                throw new Error(`An error has occurred: ${status}`);
+            }
+        } else if (error.request) {
+            throw new Error("No response received from the server.");
+        } else {
+            throw new Error(error.message || "An unexpected error occurred.");
         }
-    });
-    if (!response.ok) {
-        const message = `An error has occurred: ${response.status}`;
-        throw new Error(message);
     }
-    return response;
 };
 
 export const deleteIdeaJSON = async (data) => {

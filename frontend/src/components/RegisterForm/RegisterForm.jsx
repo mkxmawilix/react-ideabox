@@ -25,8 +25,7 @@ const RegisterForm = () => {
             {/* Generate an avatar from the user's initials */}
             const initials = username.split(' ').map(name => name[0]).join('');
             const initialAvatar = generateAvatar(initials);
-            const created_at = new Date().toISOString();
-            await signUp({ email, password, username, created_at, avatar: initialAvatar });
+            await signUp({ email, password, username, avatar: initialAvatar });
         } catch (err) {
             setError(err.message);
         }

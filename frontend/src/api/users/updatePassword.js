@@ -1,18 +1,17 @@
 import apiClient from '../../services/Api/apiClient';
 
-export const createUserJSON = async ({ email, password, username, avatar}) => {
+export const updatePasswordJSON = async ({userId, currentPassword, newPassword}) => {
     try {
-        const data = { email, password, username, avatar};
-        const response = await apiClient.post('/register', data);
+        const response = await apiClient.patch(`/user/${userId}/password`, {
+            currentPassword,
+            newPassword
+        });
         return response.data;
     } catch (error) {
         if (error.response) {
             const { status, data } = error.response;
-            if (status === 400) {
-                throw new Error(data.message || "Invalid request.");
-            } else {
-                throw new Error(`An error has occurred: ${status}`);
-            }
+            const message = data.message || `An error has occurred: ${status}`;
+            throw new Error(message);
         } else if (error.request) {
             throw new Error("No response received from the server.");
         } else {

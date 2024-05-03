@@ -65,8 +65,8 @@ const IdeaDetails = () => {
 
     {/*  useEffect */ }
     useEffect(() => {
-        getIdeaJSON(ideaId).then((data) => {
-            data.length > 0 && setIdea(data[0]);
+        getIdeaJSON(ideaId).then((idea) => {
+            idea && setIdea(idea);
         });
     }, [ideaId]);
 
@@ -100,11 +100,11 @@ const IdeaDetails = () => {
                     </Grid>
                     <Typography variant="body1">{idea.description}</Typography>
                     <Typography variant="body2" color="textSecondary">
-                        Créé le : {formatDateAndTimeFR(idea.created_at)}
+                        Créé le : {formatDateAndTimeFR(idea.createdAt)}
                     </Typography>
-                    {idea.updated_at && idea.created_at !== idea.updated_at && (
+                    {idea.updatedAt && idea.createdAt !== idea.updatedAt && (
                         <Typography variant="body2" color="textSecondary">
-                            Modifié le : {formatDateAndTimeFR(idea.updated_at)}
+                            Modifié le : {formatDateAndTimeFR(idea.updatedAt)}
                         </Typography>
                     )}
                     <Typography variant="body2">

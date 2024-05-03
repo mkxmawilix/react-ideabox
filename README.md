@@ -23,7 +23,6 @@ TODO :
 - [x] Affichage "Top" des idées : 3 idées les plus votées, 3 idées les plus récentes, 3 idées dernièrement cloturées
 - [x] Tri des idées par date, titre, nombre de votes
 - [ ] Pouvoir voter pour une idée une fois connecté
-- [ ] Pouvoir commenter une idée une fois connecté
 - [x] Pouvoir s'inscrire
 - [x] Pouvoir se connecter
 - [x] Pouvoir se déconnecter
@@ -37,7 +36,23 @@ TODO :
 - [x] Pouvoir consulter les commentaires pour une idée
 - [ ] Pouvoir voter pour un message sur une idées une fois connecté
 - [ ] Mettre en place la règle de calcul des points pour les idées (en fonction de l'ancienneté, du nombre de votes, du nombre de commentaires et d'idées postées cloturées ?)
+- [ ] Suppression du compte utilisateur
+- [ ] Amélioration de la règle de mot de passe
 
 
 #### Backend
-- [ ] Intégrer la partie "Back" (NodeJS, ExpressJS, MongoDB) quand elle sera disponible
+- [x] Enregistrement des utilisateurs
+- [x] Connexion des utilisateurs
+- [ ] Déconnexion des utilisateurs
+- [ ] Contrôle des tokens bloqués
+- [x] Modification des utilisateurs
+- [ ] Suppression des utilisateurs
+- [x] Enregistrement des idées
+- [x] Modification des idées
+- [x] Suppression des idées
+- [ ] Enregistrement des commentaires
+- [ ] Modification des commentaires
+- [ ] Suppression des commentaires
+- [ ] Enregistrement des votes
+- [ ] Modification des votes
+- [ ] Suppression des votes

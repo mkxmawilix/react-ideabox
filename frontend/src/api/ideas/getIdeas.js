@@ -1,41 +1,45 @@
-export const getIdeasJSON = async () => {
-    const url = "http://localhost:3000/api/ideas";
-    const response = await fetch(url, {
-        method: 'GET',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-    });
-    if (!response.ok) {
-        const message = `An error has occured: ${response.status}`;
-        throw new Error(message);
-    }
-    // change userId to user_id to avoid collection deletion by json-server
-    const data = await response.json();
-    for (const obj of data) {
-        obj.userId = obj.user_id;
-        delete obj.user_id;
-    }
+import apiClient from '../../services/Api/apiClient';
 
-    return data;
-}
+export const getIdeasJSON = async () => {
+    try {
+        const response = await apiClient.get("/ideas");
+        return response.data;
+    } catch (error) {
+        if (error.response) {
+            const { status, data } = error.response;
+            if (status === 400) {
+                throw new Error(data.message || "Invalid request.");
+            } else {
+                throw new Error(`An error has occurred: ${status}`);
+            }
+        } else if (error.request) {
+            throw new Error("No response received from the server.");
+        } else {
+            throw new Error(error.message || "An unexpected error occurred.");
+        }
+    }
+};
 
 export const getIdeaJSON = async (ideaId) => {
     if (!ideaId) {
         throw new Error('No idea ID provided');
     }
-    const url = `http://localhost:3000/api/ideas?id=${ideaId}`;
-    const response = await fetch(url, {
-        method: 'GET',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-    });
-
-    if (!response.ok) {
-        const message = `An error has occurred: ${response.status}`;
-        throw new Error(message);
+    try {
+        const response = await apiClient.get(`/idea/${ideaId}`);
+        return response.data;
+    } catch (error) {
+        console.log(error);
+        if (error.response) {
+            const { status, data } = error.response;
+            if (status === 400) {
+                throw new Error(data.message || "Invalid request.");
+            } else {
+                throw new Error(`An error has occurred: ${status}`);
+            }
+        } else if (error.request) {
+            throw new Error("No response received from the server.");
+        } else {
+            throw new Error(error.message || "An unexpected error occurred.");
+        }
     }
-
-    return await response.json();
 };

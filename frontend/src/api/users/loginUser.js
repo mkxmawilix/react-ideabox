@@ -1,19 +1,24 @@
-export const loginUsersJSON = async (data) => {
-    const url = "http://localhost:3000/api/login";
-    const response = await fetch(url, {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(data)
-    });
-    if (!response.ok && response.status === 400) {
-        let message = await response.json();
-        throw new Error(`${message}`);
+import apiClient from '../../services/Api/apiClient';
+
+export const loginUsersJSON = async ({ email, password }) => {
+    try {
+        const response = await apiClient.post('/login', {
+            email,
+            password
+        });
+        return response.data;
+    } catch (error) {
+        if (error.response) {
+            const { status, data } = error.response;
+            if (status === 400) {
+                throw new Error(data.message || "Invalid credentials.");
+            } else {
+                throw new Error(`An error has occurred: ${status}`);
+            }
+        } else if (error.request) {
+            throw new Error("No response received from the server.");
+        } else {
+            throw new Error(error.message || "An unexpected error occurred.");
+        }
     }
-    if (!response.ok) {
-        const message = `An error has occured: ${response.status}`;
-        throw new Error(message);
-    }
-    return await response.json();
-}
+};

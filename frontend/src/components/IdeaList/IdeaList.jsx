@@ -84,7 +84,7 @@ const IdeaList = ({ ideas, onSubmitIdea, onUpdateIdea, onDeleteIdea }) => {
 
     {/* Sorting */ }
     const [orderDirection, setOrderDirection] = useState('desc');
-    const [orderBy, setOrderBy] = useState('created_at');
+    const [orderBy, setOrderBy] = useState('createdAt');
 
     const handleRequestSort = (property) => {
         const isAsc = orderBy === property && orderDirection === 'asc';
@@ -93,8 +93,8 @@ const IdeaList = ({ ideas, onSubmitIdea, onUpdateIdea, onDeleteIdea }) => {
     };
 
     const sortedIdeas = [...ideas].sort((a, b) => {
-        if (orderBy === 'created_at') {
-            return orderDirection === 'asc' ? new Date(a.created_at) - new Date(b.created_at) : new Date(b.created_at) - new Date(a.created_at);
+        if (orderBy === 'createdAt') {
+            return orderDirection === 'asc' ? new Date(a.createdAt) - new Date(b.createdAt) : new Date(b.createdAt) - new Date(a.createdAt);
         }
         if (orderBy === 'points') {
             return orderDirection === 'asc' ? a.points - b.points : b.points - a.points;
@@ -148,9 +148,9 @@ const IdeaList = ({ ideas, onSubmitIdea, onUpdateIdea, onDeleteIdea }) => {
                     <Table sx={{ tableLayout: 'fixed' }} aria-label="simple table">
                         <TableHead>
                             <TableRow>
-                                <StyledHeadCellDateCreatedAt onClick={() => handleRequestSort('created_at')}>
+                                <StyledHeadCellDateCreatedAt onClick={() => handleRequestSort('createdAt')}>
                                     <div style={{ display: 'flex' }}>
-                                        <div>Date d&apos;ajout</div> <div>{sortIcon('created_at')}</div>
+                                        <div>Date d&apos;ajout</div> <div>{sortIcon('createdAt')}</div>
                                     </div>
                                 </StyledHeadCellDateCreatedAt>
                                 <StyledHeadCellTitle onClick={() => handleRequestSort('title')}>
@@ -172,13 +172,18 @@ const IdeaList = ({ ideas, onSubmitIdea, onUpdateIdea, onDeleteIdea }) => {
                             </TableRow>
                         </TableHead>
                         <TableBody>
-                            {sortedIdeas.map((idea) => (
+                            {sortedIdeas && sortedIdeas.length === 0 && (
+                                <TableRow>
+                                    <TableCell colSpan={5} align="center">Aucune idée trouvée</TableCell>
+                                </TableRow>
+                            )}
+                            {sortedIdeas && sortedIdeas.map((idea) => (
                                 <TableRow
                                     key={idea.id}
                                     sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
                                 >
                                     <TableCell component="th" scope="row" align="left" onClick={() => handleOpenModalRead(idea)}>
-                                        {new Date(idea.created_at).toLocaleString('fr-FR')}
+                                        {new Date(idea.createdAt).toLocaleString('fr-FR')}
                                     </TableCell>
                                     <TableCell component="th" scope="row" align="left" onClick={() => handleOpenModalRead(idea)}>
                                         <NavLink to={`/idea/${idea.id}`}>

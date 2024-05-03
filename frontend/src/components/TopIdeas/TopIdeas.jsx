@@ -42,7 +42,7 @@ const TopIdeas = ({ ideas, sortFunction, title, count }) => {
                         <Card key={idea.id} variant="outlined" style={{ marginBottom: '10px' }}>
                             <CardContent>
                                 <Typography color="textSecondary" gutterBottom>
-                                    {formatDateAndTimeFR(idea.created_at)}
+                                    {formatDateAndTimeFR(idea.createdAt)}
                                 </Typography>
                                 <Typography variant="h6">
                                     {idea.title}
