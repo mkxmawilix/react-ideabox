@@ -7,8 +7,7 @@
     "dev": "vite",
     "build": "vite build",
     "lint": "eslint . --ext js,jsx --report-unused-disable-directives --max-warnings 0",
-    "preview": "vite preview",
-    "json-server": "json-server -m ./node_modules/json-server-auth --port 3040 --routes src/api/fake-backend/routes.json --watch src/api/fake-backend/db.json"
+    "preview": "vite preview"
   },
   "dependencies": {
     "@emotion/react": "^11.11.1",

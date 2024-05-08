@@ -1,14 +1,11 @@
 # Ideabox
 
-Ce projet est un simple projet (front) de "Boite à idées" réalisé en ReactJS.
+Ce projet est un simple projet de "Boite à idées" réalisé en ReactJS.
 
-Il a pour but de me faire découvrir le framework ReactJS et de me familiariser avec.
+Il y a donc un backend en NodeJS/Express/Mongodb et un frontend en ReactJS.
 
-N'ayant pas de partie "Back", les logiques de connexion, création/modification/suppression d'idées, de vote sont totalement fictives et les données non persistantes.
+Il a pour but de me faire découvrir la stack MERN et de me permettre de m'entrainer sur le développement d'une application complète.
 
-La partie "Back" n'est pas encore disponible mais sera réalisée en NodeJS (ExpressJS) et MongoDB par la suite.
-
-Pour le moment un simple fichier JSON est utilisé pour simuler une base de données.
 
 ## Fonctionnalités
 
