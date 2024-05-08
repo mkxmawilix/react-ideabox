@@ -50,7 +50,7 @@ TODO :
 - [x] Enregistrement des idées
 - [x] Modification des idées
 - [x] Suppression des idées
-- [ ] Enregistrement des commentaires
+- [x] Enregistrement des commentaires
 - [ ] Modification des commentaires
 - [ ] Suppression des commentaires
 - [ ] Enregistrement des votes

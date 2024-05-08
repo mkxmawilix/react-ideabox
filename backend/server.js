@@ -6,6 +6,7 @@ const mongoose = require("mongoose");
 
 const UserRoute = require("./routes/users/UserRoute");
 const IdeaRoute = require("./routes/ideas/IdeaRoute");
+const MessageRoute = require("./routes/messages/MessageRoute");
 
 const app = express();
 
@@ -33,3 +34,4 @@ mongoose.set("useFindAndModify", false);
 app.use(cors());
 app.use("/", UserRoute);
 app.use("/", IdeaRoute);
+app.use("/", MessageRoute);

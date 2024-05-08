@@ -1,18 +1,24 @@
+import apiClient from "../../services/Api/apiClient";
+
 export const getIdeaMessagesJSON = async (ideaId) => {
     if (!ideaId) {
         return;
     }
-    const url = `http://localhost:3000/api/messages?ideaId=${ideaId}&_sort=createdAt&_order=desc`;
-    const response = await fetch(url, {
-        method: "GET",
-        headers: {
-            "Content-Type": "application/json",
-        },
-    });
-    if (!response.ok) {
-        const message = `An error has occured: ${response.status}`;
-        throw new Error(message);
+    try {
+        const response = await apiClient.get(`/idea/messages/${ideaId}`);
+        return response.data;
+    } catch (error) {
+        if (error.response) {
+            const { status, data } = error.response;
+            if (status === 400) {
+                throw new Error(data.message || "Invalid request.");
+            } else {
+                throw new Error(`An error has occurred: ${status}`);
+            }
+        } else if (error.request) {
+            throw new Error("No response received from the server.");
+        } else {
+            throw new Error(error.message || "An unexpected error occurred.");
+        }
     }
-
-    return await response.json();
 };

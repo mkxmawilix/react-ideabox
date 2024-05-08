@@ -46,8 +46,6 @@ const IdeaDetails = () => {
             content: newMessage,
             ideaId: ideaId,
             userId: auth.userId,
-            userName: auth.user,
-            createdAt: new Date(),
         };
         addMessage(messageData).then(() => {
             toast.success("Message Submitted")

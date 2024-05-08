@@ -1,22 +1,28 @@
-export const createMessageJSON = async (data) => {
-    if (!data.userId) {
+import apiClient from "../../services/Api/apiClient";
+
+export const createMessageJSON = async ({ideaId, content, userId}) => {
+    if (!userId) {
         throw new Error("No userId provided");
     }
-    if (!data.content) {
+    if (!content) {
         throw new Error("No content provided");
     }
-    const url = "http://localhost:3040/api/messages";
-    const response = await fetch(url, {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json"
-        },
-        body: JSON.stringify(data)
-    });
 
-    if (!response.ok) {
-        const message = `An error has occured: ${response.status}`;
-        throw new Error(message);
+    try {
+        const response = await apiClient.post("/idea/message", { ideaId, message: content, userId });
+        return response.data;
+    } catch (error) {
+        if (error.response) {
+            const { status, data } = error.response;
+            if (status === 400) {
+                throw new Error(data.message || "Invalid request.");
+            } else {
+                throw new Error(`An error has occurred: ${status}`);
+            }
+        } else if (error.request) {
+            throw new Error("No response received from the server.");
+        } else {
+            throw new Error(error.message || "An unexpected error occurred.");
+        }
     }
-    return await response.json();
-}
+};

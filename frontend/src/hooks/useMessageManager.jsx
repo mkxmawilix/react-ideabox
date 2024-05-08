@@ -9,6 +9,12 @@ const getMessages = async (modelName, modelId) => {
     }
 };
 
+const createMessage = async (modelName, messageData) => {
+    if (modelName === "ideas") {
+        return await createMessageJSON(messageData);
+    }
+}
+
 const useMessageManager = (modelName, modelId, initialMessages = []) => {
     const [messages, setMessages] = useState(initialMessages);
     const [countMessages, setCountMessages] = useState(0);
@@ -30,9 +36,9 @@ const useMessageManager = (modelName, modelId, initialMessages = []) => {
         }
     }, [modelName, modelId]);
 
-    const addMessage = async (newMessage) => {
+    const addMessage = async (messageData) => {
         try {
-            await createMessageJSON(newMessage);
+            await createMessage(modelName, messageData);
             fetchMessages();
         } catch (error) {
             console.error(error);
